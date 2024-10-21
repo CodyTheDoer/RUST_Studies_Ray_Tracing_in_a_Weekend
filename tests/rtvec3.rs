@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod rtvec3_tests {
-    use std::ops::{Add, Sub};
+    use std::ops::{Add, Sub, Mul, Div};
     use raytracing_in_a_weekend::RtVec3;
 
     fn setup() -> (RtVec3, RtVec3) {
@@ -19,47 +19,49 @@ mod rtvec3_tests {
     #[test]
     fn add() {
         let (v1, v2) = setup();
-        let v_add = RtVec3::new(5.0, 7.0, 9.0);
-        assert!(v_add == v1 + v2);
-        assert!(v_add == v1.add(v2));
+        let add = RtVec3::new(5.0, 7.0, 9.0);
+        assert!(add == v1 + v2);
+        assert!(add == v1.add(v2));
     }
 
     #[test]
     fn sub() {
         let (v1, v2) = setup();
-        let v_sub = RtVec3::new(-3.0, -3.0, -3.0);
-        assert!(v_sub == v1 - v2);
-        assert!(v_sub == v1.sub(v2));
+        let sub = RtVec3::new(-3.0, -3.0, -3.0);
+        assert!(sub == v1 - v2);
+        assert!(sub == v1.sub(v2));
     }
 
     #[test]
     fn mul() {
         let (v1, v2) = setup();
-        let v_mul = RtVec3::new(4.0, 10.0, 18.0);
-        assert!(v_mul == v1 * v2);
+        let mul = RtVec3::new(4.0, 10.0, 18.0);
+        assert!(mul == v1 * v2);
+        assert!(mul == v1.mul(v2));
     }
 
     #[test]
     fn div() {
         let (v1, v2) = setup();
-        let v_div = RtVec3::new(0.25, 0.4, 0.5);
-        assert!(v_div == v1 / v2);
+        let div = RtVec3::new(0.25, 0.4, 0.5);
+        assert!(div == v1 / v2);
+        assert!(div == v1.div(v2));
     }
 
     #[test]
     fn mul_s() {
         let (v1, _) = setup();
-        let v_mul_s = RtVec3::new(2.0, 4.0, 6.0);
-        assert!(v_mul_s == v1.multiply_scalar(2.0));
-        assert!(v_mul_s == v1*2.0);
+        let mul_s = RtVec3::new(2.0, 4.0, 6.0);
+        assert!(mul_s == v1.multiply_scalar(2.0));
+        assert!(mul_s == v1*2.0);
     }
 
     #[test]
     fn div_s() {
         let (v1, _) = setup();
-        let v_div_s = RtVec3::new(0.5, 1.0, 1.5);
-        assert!(v_div_s == v1.divide_scalar(2.0));
-        assert!(v_div_s == v1/2.0);
+        let div_s = RtVec3::new(0.5, 1.0, 1.5);
+        assert!(div_s == v1.divide_scalar(2.0));
+        assert!(div_s == v1/2.0);
     }
 
     #[test]
@@ -69,5 +71,12 @@ mod rtvec3_tests {
         let v3 = v1.add(v2);
         let length = v3.length();
         assert!(length == known_length);
+    }
+
+    #[test]
+    fn dot() {
+        let (v1, v2) = setup();
+        let dot: f32 = 32.0;
+        assert!(dot == v1.dot(&v2));
     }
 }

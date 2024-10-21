@@ -56,6 +56,10 @@ impl RtVec3 {
         }
     }
 
+    pub fn dot(&self, other: &Self) -> f32 {
+        self.x * other.x + self.y * other.y + self.z * other.z
+    }
+
     pub fn eq(&self, other: &Self) -> bool {
         self == other
     }
@@ -103,7 +107,7 @@ impl Mul for RtVec3 {
 
 impl Mul<f32> for RtVec3 {
     type Output = RtVec3;
-    
+
     fn mul(self, t: f32) -> RtVec3 {
         RtVec3 {
             x: self.x * t,
