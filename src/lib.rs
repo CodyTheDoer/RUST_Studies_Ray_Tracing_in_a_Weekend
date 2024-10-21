@@ -61,21 +61,6 @@ impl RtVec3 {
     }
 }
 
-/* Outdated implimentation, correct way to allow symbol use as well implmented below
-fn add(self, other: RtVec3) -> RtVec3 {
-    let x = self.clone().x() + other.clone().x(); 
-    let y = self.clone().y() + other.clone().y(); 
-    let z = self.clone().z() + other.clone().z(); 
-    let res: RtVec3 = Self::new(x, y, z);
-    res
-} */
-
-// impl PartialEq for RtVec3 {
-//     fn eq(&self, other: &Self) -> bool {
-//         self == other
-//     }
-// }
-
 // Operator Overloading
 impl Add for RtVec3 {
     type Output = RtVec3;
@@ -88,6 +73,9 @@ impl Add for RtVec3 {
         }
     }
 }
+
+// Type alias for geometric clarity, similar to using in C++
+type Point3 = RtVec3;
 
 impl Sub for RtVec3 {
     type Output = RtVec3;
@@ -113,6 +101,18 @@ impl Mul for RtVec3 {
     }
 }
 
+impl Mul<f32> for RtVec3 {
+    type Output = RtVec3;
+    
+    fn mul(self, t: f32) -> RtVec3 {
+        RtVec3 {
+            x: self.x * t,
+            y: self.y * t,
+            z: self.z * t,
+        }
+    }
+}
+
 impl Div for RtVec3 {
     type Output = RtVec3;
 
@@ -121,6 +121,18 @@ impl Div for RtVec3 {
             x: self.x / other.x,
             y: self.y / other.y,
             z: self.z / other.z,
+        }
+    }
+}
+
+impl Div<f32> for RtVec3 {
+    type Output = RtVec3;
+
+    fn div(self, t: f32) -> RtVec3 {
+        RtVec3 {
+            x: self.x / t,
+            y: self.y / t,
+            z: self.z / t,
         }
     }
 }
