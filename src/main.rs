@@ -7,7 +7,7 @@ fn main() {
     let image_height: u32 = 1000;
 
     // Render Data
-    build_file(image_width, image_height);
+    let _ = build_file(image_width, image_height);
 }
 
 fn build_file(
@@ -22,9 +22,9 @@ fn build_file(
     file.write_all(b"255\n")?;
 
     // Pixel Algo
-    for pixel_h in (0..image_height) {
+    for pixel_h in 0..image_height {
         println!("Scanline's remaining: {:?} ", (image_height - pixel_h));
-        for pixel_w in (0..image_width) {
+        for pixel_w in 0..image_width {
             let r: f32 = (pixel_w as f32) / ((image_width - 1) as f32);
             let g: f32 = (pixel_h as f32) / ((image_height - 1) as f32);
             let b: f32 = 0.0;
