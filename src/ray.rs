@@ -75,7 +75,7 @@ fn hit_sphere(
     if discriminant < 0.0 {
         return -1.0;
     } else {
-        return -b - discriminant.sqrt() / 2.0 * a;
+        return (-b - discriminant.sqrt()) / (2.0 * a);
     }
 }
 
