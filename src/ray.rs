@@ -65,17 +65,19 @@ fn hit_sphere(
     let oc = center - ray.origin();
 
     // Quadratic formula coefficients.
-    let a = ray.direction().dot(&ray.direction());
+    let a = ray.direction().length_squared();
     let b = -2.0 * ray.direction().dot(&oc);
-    let c = oc.dot(&oc) - radius * radius;
+    let h = ray.direction().dot(&oc);
+
+    let c = oc.length_squared()- radius * radius;
 
     // Discriminant calculation.
-    let discriminant = b * b - 4.0 * a * c;
+    let discriminant = h * h - a * c;
 
     if discriminant < 0.0 {
         return -1.0;
     } else {
-        return (-b - discriminant.sqrt()) / (2.0 * a);
+        return (h - discriminant.sqrt()) / a;
     }
 }
 
