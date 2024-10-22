@@ -67,7 +67,7 @@ mod rtvec3_tests {
     #[test]
     fn length() {
         let (v1, v2) = setup();
-        let known_length: f32 = 12.4499;
+        let known_length: f64 = 12.449899597988733;
         let v3 = v1.add(v2);
         let length = v3.length();
         assert!(length == known_length);
@@ -76,7 +76,7 @@ mod rtvec3_tests {
     #[test]
     fn dot() {
         let (v1, v2) = setup();
-        let dot: f32 = 32.0;
+        let dot: f64 = 32.0;
         assert!(dot == v1.dot(&v2));
     }
 
@@ -90,7 +90,7 @@ mod rtvec3_tests {
     #[test]
     fn unit_vector() {
         let (v1, _) = setup();
-        let known_uv = RtVec3::new(0.26726124, 0.5345225, 0.8017837);
+        let known_uv = RtVec3::new(0.2672612419124244, 0.5345224838248488, 0.8017837257372732);
         let uv: RtVec3 = v1.unit_vector();
         assert!(known_uv == uv);
     }

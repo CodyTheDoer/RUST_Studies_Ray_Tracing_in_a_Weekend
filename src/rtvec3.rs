@@ -2,16 +2,16 @@ use std::ops::{Add, Sub, Mul, Div, Neg};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct RtVec3{
-    x: f32,
-    y: f32,
-    z: f32,
+    x: f64,
+    y: f64,
+    z: f64,
 }
 
 // Type alias for geometric clarity, similar to using in C++
 pub type Point3 = RtVec3;
 
 impl RtVec3 {
-    pub fn new(x: f32, y: f32, z: f32) -> Self {
+    pub fn new(x: f64, y: f64, z: f64) -> Self {
         RtVec3 {
             x,
             y,
@@ -19,30 +19,30 @@ impl RtVec3 {
         }
     }
     
-    pub fn x(&self) -> f32 {
+    pub fn x(&self) -> f64 {
         self.x
     }
     
-    pub fn y(&self) -> f32 {
+    pub fn y(&self) -> f64 {
         self.y
     }
     
-    pub fn z(&self) -> f32 {
+    pub fn z(&self) -> f64 {
         self.z
     }
     
     // Calculating length squared
-    pub fn length_squared(&self) -> f32 {
+    pub fn length_squared(&self) -> f64 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
 
     // Calculating magnitude
-    pub fn length(&self) -> f32 {
+    pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
     }
 
     // Scalar multiplication
-    pub fn multiply_scalar(&self, t: f32) -> RtVec3 {
+    pub fn multiply_scalar(&self, t: f64) -> RtVec3 {
         RtVec3 {
             x: self.x * t,
             y: self.y * t,
@@ -51,7 +51,7 @@ impl RtVec3 {
     }
 
     // Scalar Division
-    pub fn divide_scalar(&self, t: f32) -> RtVec3 {
+    pub fn divide_scalar(&self, t: f64) -> RtVec3 {
         RtVec3 {
             x: self.x / t,
             y: self.y / t,
@@ -59,7 +59,7 @@ impl RtVec3 {
         }
     }
 
-    pub fn dot(&self, other: &Self) -> f32 {
+    pub fn dot(&self, other: &Self) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
@@ -97,7 +97,7 @@ impl Add for RtVec3 {
     }
 }
 
-impl Add<RtVec3> for f32 {
+impl Add<RtVec3> for f64 {
     type Output = RtVec3;
 
     fn add(self, v: RtVec3) -> RtVec3 {
@@ -114,9 +114,9 @@ impl Add<RtVec3> for u32 {
 
     fn add(self, v: RtVec3) -> RtVec3 {
         RtVec3 {
-            x: v.x + self as f32,
-            y: v.y + self as f32,
-            z: v.z + self as f32,
+            x: v.x + self as f64,
+            y: v.y + self as f64,
+            z: v.z + self as f64,
         }
     }
 }
@@ -133,7 +133,7 @@ impl Sub for RtVec3 {
     }
 }
 
-impl Sub<RtVec3> for f32 {
+impl Sub<RtVec3> for f64 {
     type Output = RtVec3;
 
     fn sub(self, v: RtVec3) -> RtVec3 {
@@ -150,9 +150,9 @@ impl Sub<RtVec3> for u32 {
 
     fn sub(self, v: RtVec3) -> RtVec3 {
         RtVec3 {
-            x: v.x - self as f32,
-            y: v.y - self as f32,
-            z: v.z - self as f32,
+            x: v.x - self as f64,
+            y: v.y - self as f64,
+            z: v.z - self as f64,
         }
     }
 }
@@ -169,10 +169,10 @@ impl Mul for RtVec3 {
     }
 }
 
-impl Mul<f32> for RtVec3 {
+impl Mul<f64> for RtVec3 {
     type Output = RtVec3;
 
-    fn mul(self, t: f32) -> RtVec3 {
+    fn mul(self, t: f64) -> RtVec3 {
         RtVec3 {
             x: self.x * t,
             y: self.y * t,
@@ -185,7 +185,7 @@ impl Mul<u32> for RtVec3 {
     type Output = RtVec3;
 
     fn mul(self, t: u32) -> RtVec3 {
-        let t = t as f32;
+        let t = t as f64;
         RtVec3 {
             x: self.x * t,
             y: self.y * t,
@@ -194,7 +194,7 @@ impl Mul<u32> for RtVec3 {
     }
 }
 
-impl Mul<RtVec3> for f32 {
+impl Mul<RtVec3> for f64 {
     type Output = RtVec3;
 
     fn mul(self, v: RtVec3) -> RtVec3 {
@@ -206,7 +206,7 @@ impl Mul<RtVec3> for u32 {
     type Output = RtVec3;
 
     fn mul(self, v: RtVec3) -> RtVec3 {
-        v * self as f32 // reusing the vector * scalar logic
+        v * self as f64 // reusing the vector * scalar logic
     }
 }
 
@@ -222,10 +222,10 @@ impl Div for RtVec3 {
     }
 }
 
-impl Div<f32> for RtVec3 {
+impl Div<f64> for RtVec3 {
     type Output = RtVec3;
 
-    fn div(self, t: f32) -> RtVec3 {
+    fn div(self, t: f64) -> RtVec3 {
         RtVec3 {
             x: self.x / t,
             y: self.y / t,
@@ -238,7 +238,7 @@ impl Div<u32> for RtVec3 {
     type Output = RtVec3;
 
     fn div(self, t: u32) -> RtVec3 {
-        let t = t as f32;
+        let t = t as f64;
         RtVec3 {
             x: self.x / t,
             y: self.y / t,
@@ -247,7 +247,7 @@ impl Div<u32> for RtVec3 {
     }
 }
 
-impl Div<RtVec3> for f32 {
+impl Div<RtVec3> for f64 {
     type Output = RtVec3;
 
     fn div(self, v: RtVec3) -> RtVec3 {
@@ -259,7 +259,7 @@ impl Div<RtVec3> for u32 {
     type Output = RtVec3;
 
     fn div(self, v: RtVec3) -> RtVec3 {
-        v / self as f32 // reusing the vector * scalar logic
+        v / self as f64 // reusing the vector * scalar logic
     }
 }
 

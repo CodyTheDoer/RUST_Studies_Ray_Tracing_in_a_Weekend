@@ -26,20 +26,20 @@ impl Ray {
         self.direction
     }
 
-    pub fn at(&self, t: f32) -> RtVec3 {
+    pub fn at(&self, t: f64) -> RtVec3 {
         self.origin + t * self.direction
     }
 }
 
 #[derive(Clone, Copy, Debug)]
 pub struct RayColor {
-    r: f32,
-    g: f32,
-    b: f32,
+    r: f64,
+    g: f64,
+    b: f64,
 }
 
 impl RayColor {
-    pub fn new_rgb(r: f32, g: f32, b: f32) -> Self {
+    pub fn new_rgb(r: f64, g: f64, b: f64) -> Self {
         RayColor {
             r,
             g,
@@ -70,9 +70,9 @@ pub fn write_color_to_pixel(
     file: &mut File,
 ) -> std::io::Result<()> {
     // Pixel Algo
-    let r: f32 = pixel.x();
-    let g: f32 = pixel.y();
-    let b: f32 = pixel.z();
+    let r: f64 = pixel.x();
+    let g: f64 = pixel.y();
+    let b: f64 = pixel.z();
 
     let ir: u32 = (255.999 * r) as u32;
     let ig: u32 = (255.999 * g) as u32;
