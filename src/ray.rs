@@ -2,6 +2,7 @@ use crate::rtvec3::{RtVec3, Point3};
 
 use std::fs::File;
 use std::io::Write;
+use std::rc::Rc;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Ray {
@@ -194,5 +195,21 @@ impl Hittable for Sphere {
         record.set_face_normal(ray, record.normal);
         
         true
+    }
+}
+
+pub struct HittableList {
+    objects: Vec<Rc<dyn Hittable>>,
+}
+
+impl HittableList {
+    pub fn new() -> Self {
+        HittableList {
+            objects: Vec::new(),
+        }
+    }
+
+    pub fn add(&mut self, object: Rc<dyn Hittable>) {
+        self.objects.push(object);
     }
 }
