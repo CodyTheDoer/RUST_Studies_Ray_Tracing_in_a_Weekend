@@ -6,8 +6,17 @@ use std::io::prelude::*;
 
 fn main() {
     // Image Data
-    let image_width: u32 = 1000;
-    let image_height: u32 = 1000;
+    const aspect_ratio: f32 = 16.0 / 9.0;
+    
+    let image_width: u32 = 1600;
+    let mut image_height: u32 = (image_width as f32 / aspect_ratio) as u32;
+    if image_height < 1 {
+        image_height = 1;
+    }
+
+    let viewport_height = 2.0;
+    let viewport_width = viewport_height * (image_width as f32 / image_height as f32);
+    println!("{:?} {:?} ", viewport_height, viewport_width);
 
     // Render Data
     let _ = build_file(image_width, image_height);
