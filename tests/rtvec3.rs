@@ -79,4 +79,19 @@ mod rtvec3_tests {
         let dot: f32 = 32.0;
         assert!(dot == v1.dot(&v2));
     }
+
+    #[test]
+    fn cross() {
+        let (v1, v2) = setup();
+        let cross = RtVec3::new(-3.0, 6.0, -3.0);
+        assert!(cross == v1.cross(&v2));
+    }
+
+    #[test]
+    fn unit_vector() {
+        let (v1, _) = setup();
+        let known_uv = RtVec3::new(0.26726124, 0.5345225, 0.8017837);
+        let uv: RtVec3 = v1.unit_vector();
+        assert!(known_uv == uv);
+    }
 }

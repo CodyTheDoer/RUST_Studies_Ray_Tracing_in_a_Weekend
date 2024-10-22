@@ -60,6 +60,19 @@ impl RtVec3 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
+    pub fn cross(&self, other: &Self) -> RtVec3 {
+        RtVec3 {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.x,
+        }
+    }
+
+    pub fn unit_vector(&self) -> RtVec3 {
+        let uv = *self / self.length();
+        uv
+    }
+
     pub fn eq(&self, other: &Self) -> bool {
         self == other
     }
