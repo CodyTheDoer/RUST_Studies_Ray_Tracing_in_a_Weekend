@@ -1,4 +1,4 @@
-use raytracing_in_a_weekend::RtVec3;
+use raytracing_in_a_weekend::{RtVec3, Ray};
 use raytracing_in_a_weekend::write_color;
 
 use std::fs::File;
@@ -11,6 +11,17 @@ fn main() {
 
     // Render Data
     let _ = build_file(image_width, image_height);
+
+    // Define an origin and a direction
+    let origin = RtVec3::new(1.0, 2.0, 3.0);
+    let direction = RtVec3::new(4.0, 5.0, 6.0);
+
+    // Create a new ray
+    let ray = Ray::new(origin, direction);
+
+    // Find the point along the ray at t = 2.0
+    let point = ray.at(2.0);
+    println!("Point at t=2.0: {:?}", point);
 }
 
 fn build_file(

@@ -1,9 +1,37 @@
 mod rtvec3;
 
-pub use rtvec3::*;
+pub use rtvec3::{RtVec3, Point3};
 
 use std::fs::File;
 use std::io::{self, Write};
+
+#[derive(Clone, Copy, Debug)]
+pub struct Ray {
+    origin: Point3,
+    direction: RtVec3,
+}
+
+impl Ray {
+    pub fn new(origin: Point3, direction: RtVec3) -> Self {
+        Ray {
+            origin,
+            direction,
+        }
+    }
+    
+    // getter functions
+    pub fn origin(&self) -> Point3 {
+        self.origin
+    }
+
+    pub fn direction(&self) -> RtVec3 {
+        self.direction
+    }
+
+    pub fn at(&self, t: f32) -> RtVec3 {
+        self.origin + t * self.direction
+    }
+}
 
 pub fn write_color(
     pixel: RtVec3,

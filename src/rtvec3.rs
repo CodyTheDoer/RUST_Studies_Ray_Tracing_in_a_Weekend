@@ -8,7 +8,7 @@ pub struct RtVec3{
 }
 
 // Type alias for geometric clarity, similar to using in C++
-type Point3 = RtVec3;
+pub type Point3 = RtVec3;
 
 impl RtVec3 {
     pub fn new(x: f32, y: f32, z: f32) -> Self {
@@ -97,6 +97,18 @@ impl Add for RtVec3 {
     }
 }
 
+impl Add<RtVec3> for f32 {
+    type Output = RtVec3;
+
+    fn add(self, v: RtVec3) -> RtVec3 {
+        RtVec3 {
+            x: v.x + self,
+            y: v.y + self,
+            z: v.z + self,
+        }
+    }
+}
+
 impl Sub for RtVec3 {
     type Output = RtVec3;
 
@@ -105,6 +117,18 @@ impl Sub for RtVec3 {
             x: self.x - other.x,
             y: self.y - other.y,
             z: self.z - other.z,
+        }
+    }
+}
+
+impl Sub<RtVec3> for f32 {
+    type Output = RtVec3;
+
+    fn sub(self, v: RtVec3) -> RtVec3 {
+        RtVec3 {
+            x: v.x - self,
+            y: v.y - self,
+            z: v.z - self,
         }
     }
 }
@@ -133,6 +157,14 @@ impl Mul<f32> for RtVec3 {
     }
 }
 
+impl Mul<RtVec3> for f32 {
+    type Output = RtVec3;
+
+    fn mul(self, v: RtVec3) -> RtVec3 {
+        v * self // reusing the vector * scalar logic
+    }
+}
+
 impl Div for RtVec3 {
     type Output = RtVec3;
 
@@ -154,6 +186,14 @@ impl Div<f32> for RtVec3 {
             y: self.y / t,
             z: self.z / t,
         }
+    }
+}
+
+impl Div<RtVec3> for f32 {
+    type Output = RtVec3;
+
+    fn div(self, v: RtVec3) -> RtVec3 {
+        v / self // reusing the vector * scalar logic
     }
 }
 
