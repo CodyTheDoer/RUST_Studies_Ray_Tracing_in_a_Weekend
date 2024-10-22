@@ -56,13 +56,36 @@ impl RayColor {
     }
 }
 
+fn hit_sphere(
+    center: Point3,
+    radius: f64,
+    ray: Ray,
+) -> bool {
+    // Compute the vector from the ray's origin to the sphere center.
+    let oc = center - ray.origin();
+
+    // Quadratic formula coefficients.
+    let a = ray.direction().dot(&ray.direction());
+    let b = -2.0 * ray.direction().dot(&oc);
+    let c = oc.dot(&oc) - radius * radius;
+
+    // Discriminant calculation.
+    let discriminant = b * b - 4.0 * a * c;
+
+    return discriminant >= 0.0;
+}
+
 pub fn color(
     ray: Ray,
 ) -> RtVec3 {
+    if hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray) {
+        let color = RtVec3::new(1.0, 0.0, 0.0);
+        return color;
+    } 
     let unit_direction = ray.direction();
     let a = 0.5 * (unit_direction.y() + 1.0);
-    let res = (1.0 - a) * RtVec3::new(1.0, 1.0, 1.0) + a * RtVec3::new(0.5, 0.7, 1.0);
-    res
+    let lerp_res = (1.0 - a) * RtVec3::new(1.0, 1.0, 1.0) + a * RtVec3::new(0.5, 0.7, 1.0);
+    lerp_res
 }
 
 pub fn write_color_to_pixel(

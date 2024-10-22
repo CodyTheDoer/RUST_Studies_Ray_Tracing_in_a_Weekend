@@ -8,7 +8,7 @@ use std::io::prelude::*;
 fn main() {
     // Image Data
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    let ray_color: RayColor = RayColor::new_rgb(0.0, 0.0, 0.0);
+    let _ray_color: RayColor = RayColor::new_rgb(0.0, 0.0, 0.0);
     
     let image_width: u32 = 1600;
     let mut image_height: u32 = (image_width as f64 / ASPECT_RATIO) as u32;
@@ -33,8 +33,6 @@ fn main() {
     // Calculate the location of the upper left pixel.
     let viewport_upper_left = camera_center - RtVec3::new(0.0, 0.0, focal_length) - viewport_u / 2.0 - viewport_v / 2.0;
     let pixel_00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
-    let copy_of_pixel_00_loc = &pixel_00_loc;
-    println!("{:?}", copy_of_pixel_00_loc);
 
     // Render Data
     let _ = build_file(image_width, image_height, camera_center, pixel_00_loc, pixel_delta_u, pixel_delta_v);
@@ -47,32 +45,9 @@ fn main() {
     let ray = Ray::new(origin, direction);
 
     // Find the point along the ray at t = 2.0
-    let point = ray.at(2.0);
-    println!("Point at t=2.0: {:?}", point);
+    let _point = ray.at(2.0);
+    // println!("Point at t=2.0: {:?}", point);
 }
-
-// fn hit_sphere(
-//     center: Point3,
-//     radius: f64,
-//     ray: Ray,
-// ) -> bool {
-//     // vec3 oc = center - r.origin();
-//     let oc = center - ray.origin();
-
-//     // auto a = dot(r.direction(), r.direction());
-//     let a = ray.direction().dot(ray.direction())
-
-//     // auto b = -2.0 * dot(r.direction(), oc);
-//     let b = -2.0 * ray.direction().dot(oc)
-
-//     // auto c = dot(oc, oc) - radius*radius;
-//     let c = oc.dot(oc) - radius * radius;
-
-//     // auto discriminant = b*b - 4*a*c;
-//     let discriminant = b * b - 4 * a * c;
-
-//     return (discriminant >= 0);
-// }
 
 fn build_file(
     image_width: u32,
