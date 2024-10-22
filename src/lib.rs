@@ -33,6 +33,40 @@ impl Ray {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
+pub struct RayColor {
+    r: f32,
+    g: f32,
+    b: f32,
+}
+
+impl RayColor {
+    pub fn new_rgb(r: f32, g: f32, b: f32) -> Self {
+        RayColor {
+            r,
+            g,
+            b,
+        }
+    }
+
+    pub fn from_vec(color: RtVec3) -> Self {
+        RayColor {
+            r: color.x(),
+            g: color.y(),
+            b: color.z(),
+        }
+    }
+}
+
+pub fn ray_color(
+    ray: Ray,
+) -> RtVec3 {
+    let unit_direction = ray.direction();
+    let a = 0.5 * (unit_direction.y() + 1.0);
+    let res = (1.0 - a) * RtVec3::new(1.0, 1.0, 1.0) + a * RtVec3::new(0.5, 0.7, 1.0);
+    res
+}
+
 pub fn write_color(
     pixel: RtVec3,
     file: &mut File,

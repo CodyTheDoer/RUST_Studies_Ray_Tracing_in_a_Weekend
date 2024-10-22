@@ -109,6 +109,18 @@ impl Add<RtVec3> for f32 {
     }
 }
 
+impl Add<RtVec3> for u32 {
+    type Output = RtVec3;
+
+    fn add(self, v: RtVec3) -> RtVec3 {
+        RtVec3 {
+            x: v.x + self as f32,
+            y: v.y + self as f32,
+            z: v.z + self as f32,
+        }
+    }
+}
+
 impl Sub for RtVec3 {
     type Output = RtVec3;
 
@@ -129,6 +141,18 @@ impl Sub<RtVec3> for f32 {
             x: v.x - self,
             y: v.y - self,
             z: v.z - self,
+        }
+    }
+}
+
+impl Sub<RtVec3> for u32 {
+    type Output = RtVec3;
+
+    fn sub(self, v: RtVec3) -> RtVec3 {
+        RtVec3 {
+            x: v.x - self as f32,
+            y: v.y - self as f32,
+            z: v.z - self as f32,
         }
     }
 }
@@ -157,11 +181,32 @@ impl Mul<f32> for RtVec3 {
     }
 }
 
+impl Mul<u32> for RtVec3 {
+    type Output = RtVec3;
+
+    fn mul(self, t: u32) -> RtVec3 {
+        let t = t as f32;
+        RtVec3 {
+            x: self.x * t,
+            y: self.y * t,
+            z: self.z * t,
+        }
+    }
+}
+
 impl Mul<RtVec3> for f32 {
     type Output = RtVec3;
 
     fn mul(self, v: RtVec3) -> RtVec3 {
         v * self // reusing the vector * scalar logic
+    }
+}
+
+impl Mul<RtVec3> for u32 {
+    type Output = RtVec3;
+
+    fn mul(self, v: RtVec3) -> RtVec3 {
+        v * self as f32 // reusing the vector * scalar logic
     }
 }
 
@@ -189,11 +234,32 @@ impl Div<f32> for RtVec3 {
     }
 }
 
+impl Div<u32> for RtVec3 {
+    type Output = RtVec3;
+
+    fn div(self, t: u32) -> RtVec3 {
+        let t = t as f32;
+        RtVec3 {
+            x: self.x / t,
+            y: self.y / t,
+            z: self.z / t,
+        }
+    }
+}
+
 impl Div<RtVec3> for f32 {
     type Output = RtVec3;
 
     fn div(self, v: RtVec3) -> RtVec3 {
         v / self // reusing the vector * scalar logic
+    }
+}
+
+impl Div<RtVec3> for u32 {
+    type Output = RtVec3;
+
+    fn div(self, v: RtVec3) -> RtVec3 {
+        v / self as f32 // reusing the vector * scalar logic
     }
 }
 
