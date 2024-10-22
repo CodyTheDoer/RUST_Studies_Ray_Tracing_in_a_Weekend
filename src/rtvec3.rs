@@ -18,14 +18,6 @@ impl RtVec3 {
             z,
         }
     }
-
-    // pub fn neg(&self) -> RtVec3 {
-    //     RtVec3 {
-    //         x: -self.x,
-    //         y: -self.y,
-    //         z: -self.z,
-    //     }
-    // }
     
     pub fn x(&self) -> f32 {
         self.x

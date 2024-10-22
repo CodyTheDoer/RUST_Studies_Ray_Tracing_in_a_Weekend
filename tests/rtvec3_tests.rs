@@ -101,5 +101,6 @@ mod rtvec3_tests {
         let known_neg = RtVec3::new(-1.0, -2.0, -3.0);
         let neg: RtVec3 = v1.neg();
         assert!(known_neg == neg);
+        assert!(known_neg == -v1);
     }
 }

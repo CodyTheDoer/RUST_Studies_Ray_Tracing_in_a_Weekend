@@ -1,4 +1,5 @@
 use raytracing_in_a_weekend::RtVec3;
+use raytracing_in_a_weekend::write_color;
 
 use std::fs::File;
 use std::io::prelude::*;
@@ -10,8 +11,6 @@ fn main() {
 
     // Render Data
     let _ = build_file(image_width, image_height);
-
-    let test_vec = RtVec3::new(1.0, 2.0, 3.0);
 }
 
 fn build_file(
@@ -29,16 +28,8 @@ fn build_file(
     for pixel_h in 0..image_height {
         println!("Scanline's remaining: {:?} ", (image_height - pixel_h));
         for pixel_w in 0..image_width {
-            let r: f32 = (pixel_w as f32) / ((image_width - 1) as f32);
-            let g: f32 = (pixel_h as f32) / ((image_height - 1) as f32);
-            let b: f32 = 0.0;
-
-            let ir: u32 = (255.999 * r) as u32;
-            let ig: u32 = (255.999 * g) as u32;
-            let ib: u32 = (255.999 * b) as u32;
-
-            let pixel_triplets = format!("{} {} {} \n",ir , ig, ib);
-            file.write_all(pixel_triplets.as_bytes())?;
+            let pixel_color = RtVec3::new(pixel_w as f32 / image_width as f32, pixel_h as f32 / image_height as f32, 0.0);
+            write_color(pixel_color, &mut file)?;
         }
     }
     println!("Generation finished.");
