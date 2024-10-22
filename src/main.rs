@@ -1,5 +1,6 @@
 use raytracing_in_a_weekend::{RtVec3, Ray, RayColor, Point3};
-use raytracing_in_a_weekend::{write_color, ray_color};
+// use raytracing_in_a_weekend::{write_color, ray_color};
+use raytracing_in_a_weekend::ray::{write_color_to_pixel, color};
 
 use std::fs::File;
 use std::io::prelude::*;
@@ -74,8 +75,8 @@ fn build_file(
             let ray_direction = pixel_center - camera_center;
             let ray = Ray::new(camera_center, ray_direction);
 
-            let pixel_color = ray_color(ray);
-            write_color(pixel_color, &mut file)?;
+            let pixel_color = color(ray);
+            write_color_to_pixel(pixel_color, &mut file)?;
         }
     }
     println!("Generation finished.");
