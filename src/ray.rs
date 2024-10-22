@@ -60,7 +60,7 @@ fn hit_sphere(
     center: Point3,
     radius: f64,
     ray: Ray,
-) -> bool {
+) -> f64 {
     // Compute the vector from the ray's origin to the sphere center.
     let oc = center - ray.origin();
 
@@ -72,15 +72,22 @@ fn hit_sphere(
     // Discriminant calculation.
     let discriminant = b * b - 4.0 * a * c;
 
-    return discriminant >= 0.0;
+    if discriminant < 0.0 {
+        return -1.0;
+    } else {
+        return -b - discriminant.sqrt() / 2.0 * a;
+    }
 }
 
 pub fn color(
     ray: Ray,
 ) -> RtVec3 {
-    if hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray) {
-        let color = RtVec3::new(1.0, 0.0, 0.0);
-        return color;
+    let t = hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray);
+    if t > 0.0 {
+        // let color = RtVec3::new(1.0, 0.0, 0.0);
+        // return color;
+        let n = (ray.at(t) - RtVec3::new(0.0, 0.0, -1.0)).unit_vector();
+        return 0.5 * RtVec3::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0);
     } 
     let unit_direction = ray.direction();
     let a = 0.5 * (unit_direction.y() + 1.0);
