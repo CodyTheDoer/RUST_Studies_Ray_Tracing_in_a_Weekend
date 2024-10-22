@@ -1,3 +1,5 @@
+use raytracing_in_a_weekend::RtVec3;
+
 use std::fs::File;
 use std::io::prelude::*;
 
@@ -8,6 +10,8 @@ fn main() {
 
     // Render Data
     let _ = build_file(image_width, image_height);
+
+    let test_vec = RtVec3::new(1.0, 2.0, 3.0);
 }
 
 fn build_file(
