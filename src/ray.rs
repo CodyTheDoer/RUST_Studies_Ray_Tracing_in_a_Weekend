@@ -115,6 +115,7 @@ pub fn write_color_to_pixel(
     Ok(())
 }
 
+#[derive(Clone, Copy, Debug)]
 pub struct HitRecord {
     pub p: Point3,
     pub normal: RtVec3,
@@ -156,6 +157,7 @@ pub trait Hittable {
     ) -> bool;
 }
 
+#[derive(Clone, Copy, Debug)]
 pub struct Sphere {
     pub center: Point3,
     pub radius: f64,
@@ -198,6 +200,7 @@ impl Hittable for Sphere {
     }
 }
 
+#[derive(Clone)]
 pub struct HittableList {
     objects: Vec<Rc<dyn Hittable>>,
 }
@@ -209,7 +212,41 @@ impl HittableList {
         }
     }
 
+    pub fn with_object(object: Rc<dyn Hittable>) -> Self {
+        let mut list = HittableList::new();
+        list.add(object);
+        list
+    }
+
     pub fn add(&mut self, object: Rc<dyn Hittable>) {
         self.objects.push(object);
+    }
+
+    pub fn clear(&mut self) {
+        self.objects.clear();
+    }
+}
+
+impl Hittable for HittableList {
+    fn hit(
+        &self, 
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        record: &mut HitRecord,
+    ) -> bool {
+        let mut temp_record = HitRecord::new(Point3::new(0.0, 0.0, 0.0), RtVec3::new(0.0, 0.0, 0.0), 0.0, false);
+        let mut hit_anything: bool = false;
+        let mut closest_so_far = t_max;
+
+        for object in &self.objects {
+            if object.hit(ray, t_min, closest_so_far, &mut temp_record) {
+                hit_anything = true;
+                closest_so_far = temp_record.t;
+                *record = temp_record.clone();
+            }
+        }
+
+        hit_anything
     }
 }
