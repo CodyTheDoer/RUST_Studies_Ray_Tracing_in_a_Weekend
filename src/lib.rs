@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub, Mul, Div};
+use std::ops::{Add, Sub, Mul, Div, Neg};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct RtVec3{
@@ -15,6 +15,14 @@ impl RtVec3 {
             z,
         }
     }
+
+    // pub fn neg(&self) -> RtVec3 {
+    //     RtVec3 {
+    //         x: -self.x,
+    //         y: -self.y,
+    //         z: -self.z,
+    //     }
+    // }
     
     pub fn x(&self) -> f32 {
         self.x
@@ -69,14 +77,20 @@ impl RtVec3 {
     }
 
     pub fn unit_vector(&self) -> RtVec3 {
-        let uv = *self / self.length();
-        uv
+        let uv = self.length();
+        if uv == 0.0 {
+            panic!("Cannot normalize a zero-length vector");
+        }
+        *self / uv
     }
 
     pub fn eq(&self, other: &Self) -> bool {
         self == other
     }
 }
+
+// Type alias for geometric clarity, similar to using in C++
+type Point3 = RtVec3;
 
 // Operator Overloading
 impl Add for RtVec3 {
@@ -90,9 +104,6 @@ impl Add for RtVec3 {
         }
     }
 }
-
-// Type alias for geometric clarity, similar to using in C++
-type Point3 = RtVec3;
 
 impl Sub for RtVec3 {
     type Output = RtVec3;
@@ -150,6 +161,18 @@ impl Div<f32> for RtVec3 {
             x: self.x / t,
             y: self.y / t,
             z: self.z / t,
+        }
+    }
+}
+
+impl Neg for RtVec3 {
+    type Output = RtVec3;
+
+    fn neg(self) -> RtVec3 {
+        RtVec3 {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
         }
     }
 }

@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod rtvec3_tests {
-    use std::ops::{Add, Sub, Mul, Div};
+    use std::ops::{Add, Sub, Mul, Div, Neg};
     use raytracing_in_a_weekend::RtVec3;
 
     fn setup() -> (RtVec3, RtVec3) {
@@ -93,5 +93,13 @@ mod rtvec3_tests {
         let known_uv = RtVec3::new(0.26726124, 0.5345225, 0.8017837);
         let uv: RtVec3 = v1.unit_vector();
         assert!(known_uv == uv);
+    }
+    
+    #[test]
+    fn neg() {
+        let (v1, _) = setup();
+        let known_neg = RtVec3::new(-1.0, -2.0, -3.0);
+        let neg: RtVec3 = v1.neg();
+        assert!(known_neg == neg);
     }
 }
