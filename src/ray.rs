@@ -5,8 +5,8 @@ use std::io::Write;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Ray {
-    origin: Point3,
-    direction: RtVec3,
+    pub origin: Point3,
+    pub direction: RtVec3,
 }
 
 impl Ray {
@@ -33,9 +33,9 @@ impl Ray {
 
 #[derive(Clone, Copy, Debug)]
 pub struct RayColor {
-    r: f64,
-    g: f64,
-    b: f64,
+    pub r: f64,
+    pub g: f64,
+    pub b: f64,
 }
 
 impl RayColor {
@@ -66,9 +66,7 @@ fn hit_sphere(
 
     // Quadratic formula coefficients.
     let a = ray.direction().length_squared();
-    let b = -2.0 * ray.direction().dot(&oc);
     let h = ray.direction().dot(&oc);
-
     let c = oc.length_squared()- radius * radius;
 
     // Discriminant calculation.

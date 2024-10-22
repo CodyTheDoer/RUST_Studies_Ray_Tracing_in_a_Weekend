@@ -2,9 +2,9 @@ use std::ops::{Add, Sub, Mul, Div, Neg};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct RtVec3{
-    x: f64,
-    y: f64,
-    z: f64,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 // Type alias for geometric clarity, similar to using in C++

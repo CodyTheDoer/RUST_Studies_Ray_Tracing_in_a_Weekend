@@ -37,6 +37,7 @@ fn main() {
     // Render Data
     let _ = build_file(image_width, image_height, camera_center, pixel_00_loc, pixel_delta_u, pixel_delta_v);
 
+    /*
     // Define an origin and a direction
     let origin = RtVec3::new(1.0, 2.0, 3.0);
     let direction = RtVec3::new(4.0, 5.0, 6.0);
@@ -47,6 +48,7 @@ fn main() {
     // Find the point along the ray at t = 2.0
     let _point = ray.at(2.0);
     // println!("Point at t=2.0: {:?}", point);
+    */
 }
 
 fn build_file(
