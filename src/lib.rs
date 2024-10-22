@@ -3,7 +3,7 @@ mod rtvec3;
 pub use rtvec3::{RtVec3, Point3};
 
 use std::fs::File;
-use std::io::{self, Write};
+use std::io::Write;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Ray {
