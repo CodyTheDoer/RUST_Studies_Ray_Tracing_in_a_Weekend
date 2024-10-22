@@ -56,7 +56,7 @@ impl RayColor {
     }
 }
 
-fn hit_sphere(
+pub fn hit_sphere(
     center: Point3,
     radius: f64,
     ray: Ray,
@@ -112,4 +112,87 @@ pub fn write_color_to_pixel(
     file.write_all(pixel_triplets.as_bytes())?;
     
     Ok(())
+}
+
+pub struct HitRecord {
+    pub p: Point3,
+    pub normal: RtVec3,
+    pub t: f64,
+    pub front_face: bool,
+}
+
+impl HitRecord {
+    pub fn new(p: Point3, normal: RtVec3, t: f64, front_face: bool) -> Self {
+        HitRecord {
+            p,
+            normal,
+            t,
+            front_face,
+        }
+    }
+
+    pub fn set_face_normal (
+        &mut self,
+        ray: &Ray, 
+        outward_normal: RtVec3,
+    ) {
+        self.front_face = ray.direction().dot(&outward_normal) < 0.0;
+        self.normal = if self.front_face {
+            outward_normal
+        } else {
+            -outward_normal
+        };
+    }
+}
+
+pub trait Hittable {
+    fn hit(
+        &self, 
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        record: &mut HitRecord,
+    ) -> bool;
+}
+
+pub struct Sphere {
+    pub center: Point3,
+    pub radius: f64,
+}
+
+impl Hittable for Sphere {
+    fn hit(
+        &self, 
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        record: &mut HitRecord,
+    ) -> bool {
+        let oc = ray.origin() - self.center;
+        let a = ray.direction().length_squared();
+        let half_b = ray.direction().dot(&oc);
+        let c = oc.length_squared() - self.radius * self.radius;
+
+        let discriminant = half_b * half_b - a * c;
+
+        if discriminant < 0.0 {
+            return false;
+        } 
+        let sqrtd = discriminant.sqrt();
+
+        // Find the nearest root that lies in the acceptable range.
+        let mut root = (-half_b - sqrtd) / a;
+        if root <= t_min || t_max <= root {
+            root = (-half_b + sqrtd) / a;
+            if root <= t_min || t_max <= root {
+                return false;
+            }
+        }
+        record.t = root;
+        record.p = ray.at(record.t);
+        record.normal = (record.p - self.center) / self.radius;
+        record.set_face_normal(ray, record.normal);
+        
+        true
+    }
 }
