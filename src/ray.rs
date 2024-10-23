@@ -81,25 +81,6 @@ pub fn hit_sphere(
     }
 }
 
-// pub fn color(
-//     ray: Ray,
-//     world: HittableList,
-// ) -> RtVec3 {
-//     let mut record: HitRecord = HitRecord::new(
-//         RtVec3::new(0.0, 0.0, 0.0),
-//         RtVec3::new(0.0, 0.0, 0.0),
-//         0.0,
-//         false,
-//     );
-//     if world.hit(&ray, 0.0, f64::INFINITY, &mut record) {
-//         return 0.5 * (record.normal + RtVec3::new(1.0, 1.0, 1.0));
-//     }
-//     let unit_direction = ray.direction().unit_vector();
-//     let a = 0.5 * (unit_direction.y() + 1.0);
-//     let lerp_res = (1.0 - a) * RtVec3::new(1.0, 1.0, 1.0) + a * RtVec3::new(0.5, 0.7, 1.0);
-//     lerp_res
-// }
-
 pub fn color(
     ray: Ray,
     world: HittableList,
@@ -119,18 +100,38 @@ pub fn color(
     lerp_res
 }
 
+// pub fn write_color_to_pixel(
+//     pixel: RtVec3,
+//     file: &mut File,
+// ) -> std::io::Result<()> {
+//     // Pixel Algo
+//     let r: f64 = pixel.x();
+//     let g: f64 = pixel.y();
+//     let b: f64 = pixel.z();
+
+//     let ir: u32 = (255.999 * r.clamp(0.0, 1.0)) as u32;
+//     let ig: u32 = (255.999 * g.clamp(0.0, 1.0)) as u32;
+//     let ib: u32 = (255.999 * b.clamp(0.0, 1.0)) as u32;
+
+//     let pixel_triplets = format!("{} {} {} \n",ir , ig, ib);
+//     file.write_all(pixel_triplets.as_bytes())?;
+    
+//     Ok(())
+// }
+
 pub fn write_color_to_pixel(
-    pixel: RtVec3,
+    color: RtVec3,
     file: &mut File,
 ) -> std::io::Result<()> {
     // Pixel Algo
-    let r: f64 = pixel.x();
-    let g: f64 = pixel.y();
-    let b: f64 = pixel.z();
+    let r: f64 = color.x();
+    let g: f64 = color.y();
+    let b: f64 = color.z();
 
-    let ir: u32 = (255.999 * r.clamp(0.0, 1.0)) as u32;
-    let ig: u32 = (255.999 * g.clamp(0.0, 1.0)) as u32;
-    let ib: u32 = (255.999 * b.clamp(0.0, 1.0)) as u32;
+    let intensity: Interval = Interval::new(0.0, 0.999);
+    let ir: u32 = (255.999 * intensity.clamp(r)) as u32;
+    let ig: u32 = (255.999 * intensity.clamp(g)) as u32;
+    let ib: u32 = (255.999 * intensity.clamp(b)) as u32;
 
     let pixel_triplets = format!("{} {} {} \n",ir , ig, ib);
     file.write_all(pixel_triplets.as_bytes())?;
