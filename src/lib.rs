@@ -1,72 +1,50 @@
 pub mod ray;
 pub mod rtvec3; 
 
-pub use ray::{Ray, RayColor};
-pub use rtvec3::{RtVec3, Point3};
+use std::fs::File;
+use std::io::Write;
 
-pub struct HitRecord {
-    pub p: Point3,
-    pub normal: RtVec3,
-    pub t: f64,
+pub use ray::{Ray, RayColor, Sphere};
+pub use ray::{write_color_to_pixel, color, hit_sphere};
+pub use rtvec3::{Point3, RtVec3};
+
+pub fn degrees_to_radians(
+    degrees: f64,
+) -> f64 {
+    const PI: f64 = 3.14159265358979323846264338327950288_f64;
+    let res = degrees * PI / 180.0;
+    res
 }
 
-impl HitRecord {
-    pub fn new(p: Point3, normal: RtVec3, t: f64) -> Self {
-        HitRecord {
-            p,
-            normal,
-            t,
+pub fn build_file(
+    image_width: u32,
+    image_height: u32,
+    camera_center: RtVec3,
+    pixel_00_loc: RtVec3,
+    pixel_delta_u: RtVec3,
+    pixel_delta_v: RtVec3,
+) -> std::io::Result<()> {
+    // Setup
+    let mut file = File::create("image.ppm")?;
+    file.write_all(b"P3\n")?;
+    let img_dim = format!("{:?} {:?}\n", image_width, image_height);
+    file.write_all(img_dim.as_bytes())?;
+    file.write_all(b"255\n")?;
+
+    // Pixel Algo
+    for pixel_h in 0..image_height {
+        println!("Scanline's remaining: {:?} ", (image_height - pixel_h));
+        for pixel_w in 0..image_width {
+            let pixel_center = pixel_00_loc + pixel_w as f64 * pixel_delta_u + pixel_h as f64 * pixel_delta_v;
+            // let pixel_center = pixel_00_loc + (pixel_h as f64 * image_height as f64) + (pixel_w as f64* image_width as f64);
+            let ray_direction = pixel_center - camera_center;
+            let ray = Ray::new(camera_center, ray_direction);
+
+            let t = hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray);
+            let pixel_color = color(ray, t);
+            write_color_to_pixel(pixel_color, &mut file)?;
         }
     }
-}
-
-pub trait Hittable {
-    fn hit(
-        &self, 
-        ray: &Ray,
-        t_min: f64,
-        t_max: f64,
-        record: &mut HitRecord,
-    ) -> bool;
-}
-
-pub struct Sphere {
-    pub center: Point3,
-    pub radius: f64,
-}
-
-impl Hittable for Sphere {
-    fn hit(
-        &self, 
-        ray: &Ray,
-        t_min: f64,
-        t_max: f64,
-        record: &mut HitRecord,
-    ) -> bool {
-        let oc = ray.origin() - self.center;
-        let a = ray.direction().length_squared();
-        let half_b = ray.direction().dot(&oc);
-        let c = oc.length_squared() - self.radius * self.radius;
-
-        let discriminant = half_b * half_b - a * c;
-
-        if discriminant < 0.0 {
-            return false;
-        } 
-        let sqrtd = discriminant.sqrt();
-
-        // Find the nearest root that lies in the acceptable range.
-        let mut root = (-half_b - sqrtd) / a;
-        if root <= t_min || t_max <= root {
-            root = (-half_b + sqrtd) / a;
-            if root <= t_min || t_max <= root {
-                return false;
-            }
-        }
-        record.p = ray.at(record.t);
-        record.normal = (record.p - self.center) / self.radius;
-        record.t = root;
-        
-        true
-    }
+    println!("Generation finished.");
+    Ok(())
 }

@@ -82,8 +82,8 @@ pub fn hit_sphere(
 
 pub fn color(
     ray: Ray,
+    t: f64,
 ) -> RtVec3 {
-    let t = hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray);
     if t > 0.0 {
         // let color = RtVec3::new(1.0, 0.0, 0.0);
         // return color;
@@ -161,6 +161,15 @@ pub trait Hittable {
 pub struct Sphere {
     pub center: Point3,
     pub radius: f64,
+}
+
+impl Sphere {
+    pub fn new(center: Point3, radius: f64) -> Sphere {
+        Sphere {
+            center,
+            radius,
+        }
+    }
 }
 
 impl Hittable for Sphere {
