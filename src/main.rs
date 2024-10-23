@@ -11,23 +11,15 @@ fn main() {
 
     let mut world: HittableList = HittableList::new();
 
-    let sphere_1 = Rc::new(Sphere::new(Point3::new(-1.5, 0.0, -1.0), 0.4));
-    let sphere_2 = Rc::new(Sphere::new(Point3::new(-1.0, 0.0, -1.5), 0.25));
-    let sphere_3 = Rc::new(Sphere::new(Point3::new(0.0, 0.0, -2.0), 0.5));
-    let sphere_4 = Rc::new(Sphere::new(Point3::new(1.0, 0.0, -1.5), 0.25));
-    let sphere_5 = Rc::new(Sphere::new(Point3::new(1.5, 0.0, -1.0), 0.4));
+    let sphere = Rc::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5));
     let ground_sphere = Rc::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0));
 
-    world.add(sphere_1); 
-    world.add(sphere_2); 
-    world.add(sphere_3); 
-    world.add(sphere_4); 
-    world.add(sphere_5); 
+    world.add(sphere); 
     world.add(ground_sphere);
 
     let _ray_color: RayColor = RayColor::new_rgb(0.0, 0.0, 0.0);
     
-    let image_width: u32 = 1600;
+    let image_width: u32 = 400;
     let mut image_height: u32 = (image_width as f64 / ASPECT_RATIO) as u32;
     if image_height < 1 {
         image_height = 1;

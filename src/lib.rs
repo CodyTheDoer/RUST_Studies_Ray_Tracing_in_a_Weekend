@@ -50,3 +50,41 @@ pub fn build_file(
     println!("Generation finished.");
     Ok(())
 }
+
+pub struct Interval {
+    pub min: f64,
+    pub max: f64,
+}
+
+impl Interval {
+    // Custom New interval
+    pub fn new(min: f64, max: f64) -> Interval {
+        Interval {min, max}
+    }
+
+    pub fn new_empty(min: f64, max: f64) -> Interval {
+        Interval {
+            min: f64::INFINITY,
+            max: -f64::INFINITY,
+        }
+    }
+
+    pub fn new_universe(min: f64, max: f64) -> Interval {
+        Interval {
+            min: -f64::INFINITY,
+            max: f64::INFINITY,
+        }
+    }
+
+    pub fn size(&self) -> f64 {
+        self.max - self.min
+    }
+
+    pub fn contains(&self, x: f64) -> bool {
+        self.min <= x && x <= self.max
+    }
+
+    pub fn surrounds(&self, x: f64) -> bool {
+        self.min < x && x < self.max
+    }
+}
