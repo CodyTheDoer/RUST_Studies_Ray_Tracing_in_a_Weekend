@@ -1,8 +1,6 @@
 use raytracing_in_a_weekend::camera::Camera;
-// use raytracing_in_a_weekend::ray::RayColor;
 use raytracing_in_a_weekend::rtvec3::Point3;
 use raytracing_in_a_weekend::hit::{HittableList, Sphere};
-// use raytracing_in_a_weekend::build_file;
 
 use std::rc::Rc;
 

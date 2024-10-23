@@ -1,7 +1,10 @@
-use crate::ray::RayColor;
+use crate::ray::{Ray, RayColor};
+use crate::ray::{write_color_to_pixel, color};
 use crate::rtvec3::{Point3, RtVec3};
 use crate::hit::HittableList;
-use crate::build_file;
+
+use std::fs::File;
+use std::io::Write;
 
 pub struct Camera{
     world: HittableList,
@@ -72,6 +75,39 @@ impl Camera {
     pub fn render(
         &self,
     ) {
-        let _ = build_file(&self.world, self.image_width, self.image_height, self.camera_center, self.pixel_00_loc, self.pixel_delta_u, self.pixel_delta_v);
+        let _ = Self::build_file(&self.world, self.image_width, self.image_height, self.camera_center, self.pixel_00_loc, self.pixel_delta_u, self.pixel_delta_v);
+    }
+
+    fn build_file(
+        world: &HittableList,
+        image_width: u32,
+        image_height: u32,
+        camera_center: RtVec3,
+        pixel_00_loc: RtVec3,
+        pixel_delta_u: RtVec3,
+        pixel_delta_v: RtVec3,
+    ) -> std::io::Result<()> {
+        // Setup
+        let mut file = File::create("image.ppm")?;
+        file.write_all(b"P3\n")?;
+        let img_dim = format!("{:?} {:?}\n", image_width, image_height);
+        file.write_all(img_dim.as_bytes())?;
+        file.write_all(b"255\n")?;
+        
+        // Pixel Algo
+        for pixel_h in 0..image_height {
+            println!("Scanline's remaining: {:?} ", (image_height - pixel_h));
+            for pixel_w in 0..image_width {
+                let pixel_center = pixel_00_loc + pixel_w as f64 * pixel_delta_u + pixel_h as f64 * pixel_delta_v;
+                // let pixel_center = pixel_00_loc + (pixel_h as f64 * image_height as f64) + (pixel_w as f64* image_width as f64);
+                let ray_direction = pixel_center - camera_center;
+                let ray = Ray::new(camera_center, ray_direction);
+    
+                let pixel_color = color(ray, world.clone());
+                write_color_to_pixel(pixel_color, &mut file)?;
+            }
+        }
+        println!("Generation finished.");
+        Ok(())
     }
 }
