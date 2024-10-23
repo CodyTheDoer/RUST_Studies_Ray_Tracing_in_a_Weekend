@@ -80,49 +80,14 @@ impl Camera {
         }
     }
 
-    pub fn render(
-        &self,
-    ) {
+    pub fn render(&self) {
         let _ = Self::build_file(&self);
-        //     &self.world, 
-        //     self.ray_color, 
-        //     self.image_width, 
-        //     self.image_height, 
-        //     self.samples_per_pixel, 
-        //     /*
-        //     self.camera_center, 
-        //     self.pixel_00_loc, 
-        //     self.pixel_delta_u, 
-        //     self.pixel_delta_v
-        //     */
-        // );
     }
-
-    /*
-    ray get_ray(int i, int j) const {
-        // Construct a camera ray originating from the origin and directed at randomly sampled
-        // point around the pixel location i, j.
-
-        auto offset = sample_square();
-        auto pixel_sample = pixel00_loc
-                          + ((i + offset.x()) * pixel_delta_u)
-                          + ((j + offset.y()) * pixel_delta_v);
-
-        auto ray_origin = center;
-        auto ray_direction = pixel_sample - ray_origin;
-
-        return ray(ray_origin, ray_direction);
-    }
-    */
 
     fn get_ray(
         &self,
         i: u32,
         j: u32,
-        // pixel_00_loc: RtVec3,
-        // pixel_delta_u: RtVec3,
-        // pixel_delta_v: RtVec3,
-        // camera_center: RtVec3,
     ) -> Ray {
         let offset = sample_square();
         let pixel_sample = self.pixel_00_loc
@@ -133,13 +98,6 @@ impl Camera {
         let ray: Ray = Ray::new(ray_origin, ray_direction);
         ray
     }
-
-    /*
-    vec3 sample_square() const {
-        // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
-        return vec3(random_double() - 0.5, random_double() - 0.5, 0);
-    }
-    */
 
     fn build_file(&self) -> std::io::Result<()> {
         // Setup
@@ -165,12 +123,6 @@ impl Camera {
                 }
                 let average_pixel_color = average_pixel_color_sum * self.pixel_samples_scale;
                 write_color_to_pixel(average_pixel_color, &mut file)?;
-                // let pixel_center = pixel_00_loc + pixel_w as f64 * pixel_delta_u + pixel_h as f64 * pixel_delta_v;
-                // let ray_direction = pixel_center - camera_center;
-                // let ray = Ray::new(camera_center, ray_direction);
-    
-                // let pixel_color = color(ray, world.clone());
-                // write_color_to_pixel(pixel_color, &mut file)?;
             }
         }
         println!("Generation finished.");
