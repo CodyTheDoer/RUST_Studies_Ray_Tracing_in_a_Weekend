@@ -96,7 +96,7 @@ pub fn color(
         0.0,
         false,
     );
-    if world.hit(&ray, Interval::new(0.0, f64::INFINITY), &mut record) {
+    if world.hit(&ray, Interval::new(0.001, f64::INFINITY), &mut record) {
         // return 0.5 * (record.normal + RtVec3::new(1.0, 1.0, 1.0));
         let direction: RtVec3 = RtVec3::random_on_hemisphere(&record.normal);
         return 0.5 * color(Ray::new(record.p, direction), world, sample_ray_bounce_max - 1);
