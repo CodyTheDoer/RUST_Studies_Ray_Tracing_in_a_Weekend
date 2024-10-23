@@ -3,13 +3,12 @@ pub mod hit;
 pub mod ray;
 pub mod rtvec3; 
 
-use std::fs::File;
-use std::io::Write;
-
 pub use hit::{Hittable, HittableList, HitRecord};
 pub use ray::{Ray, RayColor};
 pub use ray::{write_color_to_pixel, color};
 pub use rtvec3::{Point3, RtVec3};
+
+use rand::prelude::*;
 
 // Utility functions 
 pub fn degrees_to_radians(
@@ -18,6 +17,22 @@ pub fn degrees_to_radians(
     const PI: f64 = 3.14159265358979323846264338327950288_f64;
     let res = degrees * PI / 180.0;
     res
+}
+
+pub fn random_float() -> f64 {
+    rand::thread_rng().gen()
+}
+
+pub fn random_float_interval(interval: Interval) -> f64 {
+    if interval.min.is_infinite() || interval.max.is_infinite() {
+        panic!("Cannot generate a random value for infinite intervals");
+    }
+    if interval.min >= interval.max {
+        panic!("Invalid interval: min must be less than max");
+    }
+    let mut rng = rand::thread_rng();
+    let y: f64 = rng.gen_range(interval.min..interval.max);
+    y
 }
 
 #[derive(Clone)]
