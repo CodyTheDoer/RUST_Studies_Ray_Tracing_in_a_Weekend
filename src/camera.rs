@@ -111,15 +111,10 @@ impl Camera {
         for pixel_h in 0..self.image_height {
             println!("Scanline's remaining: {:?} ", (self.image_height - pixel_h));
             for pixel_w in 0..self.image_width {
-                let mut pixel_color_samples: Vec<RtVec3> = Vec::new();
-                for sample in 0..self.samples_per_pixel {
-                    let ray = self.get_ray(pixel_w, pixel_h);
-                    let pixel_color = color(ray, self.world.clone());
-                    pixel_color_samples.push(pixel_color);
-                }
                 let mut average_pixel_color_sum: RtVec3 = RtVec3::new(0.0, 0.0, 0.0);
-                for sample in pixel_color_samples {
-                    average_pixel_color_sum = average_pixel_color_sum + sample;
+                for _ in 0..self.samples_per_pixel {
+                    let ray = self.get_ray(pixel_w, pixel_h);
+                    average_pixel_color_sum = average_pixel_color_sum + color(ray, &self.world);
                 }
                 let average_pixel_color = average_pixel_color_sum * self.pixel_samples_scale;
                 write_color_to_pixel(average_pixel_color, &mut file)?;

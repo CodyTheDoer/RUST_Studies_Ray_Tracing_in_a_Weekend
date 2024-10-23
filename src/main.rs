@@ -10,7 +10,7 @@ fn main() {
 
     let aspect_ratio: f64 = 16.0 / 9.0;
     let image_width: u32 = 400;
-    let samples_per_pixel: u32 = 10;
+    let samples_per_pixel: u32 = 100;
     let ray_color: RayColor = RayColor::new_rgb(0.0, 0.0, 0.0);
 
     let sphere = Rc::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5));

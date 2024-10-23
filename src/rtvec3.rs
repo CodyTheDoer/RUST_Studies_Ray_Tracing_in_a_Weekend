@@ -1,4 +1,8 @@
+use crate::Interval;
+use crate::{random_float, random_float_interval};
+
 use std::ops::{Add, Sub, Mul, Div, Neg};
+use rand::prelude::*;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct RtVec3{
@@ -16,6 +20,22 @@ impl RtVec3 {
             x,
             y,
             z,
+        }
+    }
+
+    pub fn random() -> Self {
+        RtVec3 {
+            x: random_float(),
+            y: random_float(),
+            z: random_float(),
+        }
+    }
+
+    pub fn random_interval(interval: Interval) -> Self {
+        RtVec3 {
+            x: random_float_interval(interval.clone()),
+            y: random_float_interval(interval.clone()),
+            z: random_float_interval(interval),
         }
     }
     

@@ -83,7 +83,7 @@ pub fn hit_sphere(
 
 pub fn color(
     ray: Ray,
-    world: HittableList,
+    world: &HittableList,
 ) -> RtVec3 {
     let mut record: HitRecord = HitRecord::new(
         RtVec3::new(0.0, 0.0, 0.0),
