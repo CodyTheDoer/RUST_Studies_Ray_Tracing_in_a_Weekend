@@ -35,6 +35,10 @@ pub fn random_float_interval(interval: Interval) -> f64 {
     y
 }
 
+pub fn sample_square() -> RtVec3 {
+    RtVec3::new(random_float() - 0.5, random_float() - 0.5, 0.0)
+}
+
 #[derive(Clone)]
 pub struct Interval {
     pub min: f64,
