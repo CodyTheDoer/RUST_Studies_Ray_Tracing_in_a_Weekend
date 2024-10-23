@@ -89,7 +89,7 @@ pub fn color(
     if sample_ray_bounce_max <= 0 {
         return RtVec3::new(0.0, 0.0, 0.0)
     }
-
+    let reflectance = 0.5;
     let mut record: HitRecord = HitRecord::new(
         RtVec3::new(0.0, 0.0, 0.0),
         RtVec3::new(0.0, 0.0, 0.0),
@@ -98,7 +98,7 @@ pub fn color(
     );
     if world.hit(&ray, Interval::new(0.001, f64::INFINITY), &mut record) {
         let direction: RtVec3 = *&record.normal + RtVec3::random_unit_vector();
-        return 0.5 * color(Ray::new(record.p, direction), world, sample_ray_bounce_max - 1);
+        return reflectance * color(Ray::new(record.p, direction), world, sample_ray_bounce_max - 1);
     }
     let unit_direction = ray.direction().unit_vector();
     let a = 0.5 * (unit_direction.y() + 1.0);
@@ -106,14 +106,23 @@ pub fn color(
     lerp_res
 }
 
+// corrects colors to consider gamma space alterations
+pub fn linear_to_gamma(linear_component: f64) -> f64
+{
+    if linear_component > 0.0 {
+        return linear_component.sqrt();
+    }
+    return 0.0;
+}
+
 pub fn write_color_to_pixel(
     color: RtVec3,
     file: &mut File,
 ) -> std::io::Result<()> {
     // Pixel Algo
-    let r: f64 = color.x();
-    let g: f64 = color.y();
-    let b: f64 = color.z();
+    let r = linear_to_gamma(color.x());
+    let g = linear_to_gamma(color.y());
+    let b = linear_to_gamma(color.z());
 
     let intensity: Interval = Interval::new(0.0, 0.999);
     let ir: u32 = (255.999 * intensity.clamp(r)) as u32;
