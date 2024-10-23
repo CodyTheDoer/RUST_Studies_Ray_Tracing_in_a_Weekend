@@ -1,10 +1,12 @@
+pub mod hit; 
 pub mod ray;
 pub mod rtvec3; 
 
 use std::fs::File;
 use std::io::Write;
 
-pub use ray::{Ray, RayColor, Sphere};
+pub use hit::{Hittable, HittableList, HitRecord};
+pub use ray::{Ray, RayColor};
 pub use ray::{write_color_to_pixel, color, hit_sphere};
 pub use rtvec3::{Point3, RtVec3};
 
@@ -17,6 +19,7 @@ pub fn degrees_to_radians(
 }
 
 pub fn build_file(
+    world: &HittableList,
     image_width: u32,
     image_height: u32,
     camera_center: RtVec3,
@@ -30,7 +33,7 @@ pub fn build_file(
     let img_dim = format!("{:?} {:?}\n", image_width, image_height);
     file.write_all(img_dim.as_bytes())?;
     file.write_all(b"255\n")?;
-
+    
     // Pixel Algo
     for pixel_h in 0..image_height {
         println!("Scanline's remaining: {:?} ", (image_height - pixel_h));
@@ -40,8 +43,7 @@ pub fn build_file(
             let ray_direction = pixel_center - camera_center;
             let ray = Ray::new(camera_center, ray_direction);
 
-            let t = hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray);
-            let pixel_color = color(ray, t);
+            let pixel_color = color(ray, world.clone());
             write_color_to_pixel(pixel_color, &mut file)?;
         }
     }

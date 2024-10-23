@@ -1,5 +1,6 @@
+use raytracing_in_a_weekend::ray::RayColor;
 use raytracing_in_a_weekend::rtvec3::{Point3, RtVec3};
-use raytracing_in_a_weekend::ray::{RayColor, Sphere};
+use raytracing_in_a_weekend::hit::{Hittable, HittableList, Sphere};
 use raytracing_in_a_weekend::build_file;
 
 use std::rc::Rc;
@@ -7,7 +8,14 @@ use std::rc::Rc;
 fn main() {
     // Image Data
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const INFINITY: f64 = f64::INFINITY;
+
+    let mut world: HittableList = HittableList::new();
+
+    let sphere_1 = Rc::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5));
+    let sphere_2 = Rc::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0));
+
+    world.add(sphere_1); 
+    world.add(sphere_2);
 
     let _ray_color: RayColor = RayColor::new_rgb(0.0, 0.0, 0.0);
     
@@ -41,5 +49,5 @@ fn main() {
     let sphere_ptr = Rc::new(Sphere::new(Point3::new(0.0, 0.0, 0.0), 1.0));
 
     // Render Data
-    let _ = build_file(image_width, image_height, camera_center, pixel_00_loc, pixel_delta_u, pixel_delta_v);
+    let _ = build_file(&world, image_width, image_height, camera_center, pixel_00_loc, pixel_delta_u, pixel_delta_v);
 }
