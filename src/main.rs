@@ -1,6 +1,6 @@
 use raytracing_in_a_weekend::ray::RayColor;
 use raytracing_in_a_weekend::rtvec3::{Point3, RtVec3};
-use raytracing_in_a_weekend::hit::{Hittable, HittableList, Sphere};
+use raytracing_in_a_weekend::hit::{HittableList, Sphere};
 use raytracing_in_a_weekend::build_file;
 
 use std::rc::Rc;
@@ -11,11 +11,19 @@ fn main() {
 
     let mut world: HittableList = HittableList::new();
 
-    let sphere_1 = Rc::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5));
-    let sphere_2 = Rc::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0));
+    let sphere_1 = Rc::new(Sphere::new(Point3::new(-1.5, 0.0, -1.0), 0.4));
+    let sphere_2 = Rc::new(Sphere::new(Point3::new(-1.0, 0.0, -1.5), 0.25));
+    let sphere_3 = Rc::new(Sphere::new(Point3::new(0.0, 0.0, -2.0), 0.5));
+    let sphere_4 = Rc::new(Sphere::new(Point3::new(1.0, 0.0, -1.5), 0.25));
+    let sphere_5 = Rc::new(Sphere::new(Point3::new(1.5, 0.0, -1.0), 0.4));
+    let ground_sphere = Rc::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0));
 
     world.add(sphere_1); 
-    world.add(sphere_2);
+    world.add(sphere_2); 
+    world.add(sphere_3); 
+    world.add(sphere_4); 
+    world.add(sphere_5); 
+    world.add(ground_sphere);
 
     let _ray_color: RayColor = RayColor::new_rgb(0.0, 0.0, 0.0);
     
@@ -43,10 +51,10 @@ fn main() {
     let viewport_upper_left = camera_center - RtVec3::new(0.0, 0.0, focal_length) - viewport_u / 2.0 - viewport_v / 2.0;
     let pixel_00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
-    // Call Rc "Reference Counted" data to 
-    let double_ptr = Rc::new(0.37);
-    let vec3_ptr = Rc::new(RtVec3::new(1.414214, 2.718281, 1.618034));
-    let sphere_ptr = Rc::new(Sphere::new(Point3::new(0.0, 0.0, 0.0), 1.0));
+    // // Call Rc "Reference Counted" data to 
+    // let double_ptr = Rc::new(0.37);
+    // let vec3_ptr = Rc::new(RtVec3::new(1.414214, 2.718281, 1.618034));
+    // let sphere_ptr = Rc::new(Sphere::new(Point3::new(0.0, 0.0, 0.0), 1.0));
 
     // Render Data
     let _ = build_file(&world, image_width, image_height, camera_center, pixel_00_loc, pixel_delta_u, pixel_delta_v);
