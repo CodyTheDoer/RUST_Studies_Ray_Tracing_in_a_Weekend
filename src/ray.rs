@@ -1,5 +1,6 @@
 use crate::rtvec3::{RtVec3, Point3};
 use crate::hit::{Hittable, HittableList, HitRecord};
+use crate::Interval;
 
 use std::fs::File;
 use std::io::Write;
@@ -80,6 +81,25 @@ pub fn hit_sphere(
     }
 }
 
+// pub fn color(
+//     ray: Ray,
+//     world: HittableList,
+// ) -> RtVec3 {
+//     let mut record: HitRecord = HitRecord::new(
+//         RtVec3::new(0.0, 0.0, 0.0),
+//         RtVec3::new(0.0, 0.0, 0.0),
+//         0.0,
+//         false,
+//     );
+//     if world.hit(&ray, 0.0, f64::INFINITY, &mut record) {
+//         return 0.5 * (record.normal + RtVec3::new(1.0, 1.0, 1.0));
+//     }
+//     let unit_direction = ray.direction().unit_vector();
+//     let a = 0.5 * (unit_direction.y() + 1.0);
+//     let lerp_res = (1.0 - a) * RtVec3::new(1.0, 1.0, 1.0) + a * RtVec3::new(0.5, 0.7, 1.0);
+//     lerp_res
+// }
+
 pub fn color(
     ray: Ray,
     world: HittableList,
@@ -90,7 +110,7 @@ pub fn color(
         0.0,
         false,
     );
-    if world.hit(&ray, 0.0, f64::INFINITY, &mut record) {
+    if world.hit(&ray, Interval::new(0.0, f64::INFINITY), &mut record) {
         return 0.5 * (record.normal + RtVec3::new(1.0, 1.0, 1.0));
     }
     let unit_direction = ray.direction().unit_vector();
