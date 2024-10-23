@@ -3,6 +3,8 @@ use crate::ray::Ray;
 
 use std::rc::Rc;
 
+// Hit Record 
+
 #[derive(Clone, Copy, Debug)]
 pub struct HitRecord {
     pub p: Point3,
@@ -35,6 +37,35 @@ impl HitRecord {
     }
 }
 
+// Hittables & Container 
+
+#[derive(Clone)]
+pub struct HittableList {
+    objects: Vec<Rc<dyn Hittable>>,
+}
+
+impl HittableList {
+    pub fn new() -> Self {
+        HittableList {
+            objects: Vec::new(),
+        }
+    }
+
+    pub fn with_object(object: Rc<dyn Hittable>) -> Self {
+        let mut list = HittableList::new();
+        list.add(object);
+        list
+    }
+
+    pub fn add(&mut self, object: Rc<dyn Hittable>) {
+        self.objects.push(object);
+    }
+
+    pub fn clear(&mut self) {
+        self.objects.clear();
+    }
+}
+
 pub trait Hittable {
     fn hit(
         &self, 
@@ -44,6 +75,32 @@ pub trait Hittable {
         record: &mut HitRecord,
     ) -> bool;
 }
+
+impl Hittable for HittableList {
+    fn hit(
+        &self, 
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        record: &mut HitRecord,
+    ) -> bool {
+        let mut temp_record = HitRecord::new(Point3::new(0.0, 0.0, 0.0), RtVec3::new(0.0, 0.0, 0.0), 0.0, false);
+        let mut hit_anything: bool = false;
+        let mut closest_so_far = t_max;
+
+        for object in &self.objects {
+            if object.hit(ray, t_min, closest_so_far, &mut temp_record) {
+                hit_anything = true;
+                closest_so_far = temp_record.t;
+                *record = temp_record.clone();
+            }
+        }
+
+        hit_anything
+    }
+}
+
+// Geometry: Sphere
 
 #[derive(Clone, Copy, Debug)]
 pub struct Sphere {
@@ -94,56 +151,5 @@ impl Hittable for Sphere {
         record.set_face_normal(ray, record.normal);
         
         true
-    }
-}
-
-#[derive(Clone)]
-pub struct HittableList {
-    objects: Vec<Rc<dyn Hittable>>,
-}
-
-impl HittableList {
-    pub fn new() -> Self {
-        HittableList {
-            objects: Vec::new(),
-        }
-    }
-
-    pub fn with_object(object: Rc<dyn Hittable>) -> Self {
-        let mut list = HittableList::new();
-        list.add(object);
-        list
-    }
-
-    pub fn add(&mut self, object: Rc<dyn Hittable>) {
-        self.objects.push(object);
-    }
-
-    pub fn clear(&mut self) {
-        self.objects.clear();
-    }
-}
-
-impl Hittable for HittableList {
-    fn hit(
-        &self, 
-        ray: &Ray,
-        t_min: f64,
-        t_max: f64,
-        record: &mut HitRecord,
-    ) -> bool {
-        let mut temp_record = HitRecord::new(Point3::new(0.0, 0.0, 0.0), RtVec3::new(0.0, 0.0, 0.0), 0.0, false);
-        let mut hit_anything: bool = false;
-        let mut closest_so_far = t_max;
-
-        for object in &self.objects {
-            if object.hit(ray, t_min, closest_so_far, &mut temp_record) {
-                hit_anything = true;
-                closest_so_far = temp_record.t;
-                *record = temp_record.clone();
-            }
-        }
-
-        hit_anything
     }
 }

@@ -7,7 +7,7 @@ use std::io::Write;
 
 pub use hit::{Hittable, HittableList, HitRecord};
 pub use ray::{Ray, RayColor};
-pub use ray::{write_color_to_pixel, color, hit_sphere};
+pub use ray::{write_color_to_pixel, color};
 pub use rtvec3::{Point3, RtVec3};
 
 pub fn degrees_to_radians(
