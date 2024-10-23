@@ -11,6 +11,7 @@ pub struct Camera{
     aspect_ratio: f64,
     image_width: u32,
     image_height: u32,
+    samples_per_pixel: u32,
     focal_length: f64,
     viewport_width: f64,
     viewport_height: f64,
@@ -28,6 +29,7 @@ impl Camera {
         world: HittableList,
         aspect_ratio: f64,
         image_width: u32,
+        samples_per_pixel: u32,
     ) -> Self {
         let _ray_color: RayColor = RayColor::new_rgb(0.0, 0.0, 0.0);
 
@@ -59,6 +61,7 @@ impl Camera {
             aspect_ratio,
             image_width,
             image_height,
+            samples_per_pixel,
             focal_length,
             viewport_width,
             viewport_height,

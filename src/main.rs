@@ -1,8 +1,6 @@
 use raytracing_in_a_weekend::camera::Camera;
 use raytracing_in_a_weekend::rtvec3::Point3;
 use raytracing_in_a_weekend::hit::{HittableList, Sphere};
-use raytracing_in_a_weekend::Interval;
-use raytracing_in_a_weekend::{random_float, random_float_interval};
 
 use std::rc::Rc;
 
@@ -17,8 +15,9 @@ fn main() {
 
     let aspect_ratio: f64 = 16.0 / 9.0;
     let image_width: u32 = 400;
+    let samples_per_pixel: u32 = 10;
 
-    let cam: Camera = Camera::new(world_objects, aspect_ratio, image_width);
+    let cam: Camera = Camera::new(world_objects, aspect_ratio, image_width, samples_per_pixel);
 
     cam.render();
 }

@@ -100,25 +100,6 @@ pub fn color(
     lerp_res
 }
 
-// pub fn write_color_to_pixel(
-//     pixel: RtVec3,
-//     file: &mut File,
-// ) -> std::io::Result<()> {
-//     // Pixel Algo
-//     let r: f64 = pixel.x();
-//     let g: f64 = pixel.y();
-//     let b: f64 = pixel.z();
-
-//     let ir: u32 = (255.999 * r.clamp(0.0, 1.0)) as u32;
-//     let ig: u32 = (255.999 * g.clamp(0.0, 1.0)) as u32;
-//     let ib: u32 = (255.999 * b.clamp(0.0, 1.0)) as u32;
-
-//     let pixel_triplets = format!("{} {} {} \n",ir , ig, ib);
-//     file.write_all(pixel_triplets.as_bytes())?;
-    
-//     Ok(())
-// }
-
 pub fn write_color_to_pixel(
     color: RtVec3,
     file: &mut File,
