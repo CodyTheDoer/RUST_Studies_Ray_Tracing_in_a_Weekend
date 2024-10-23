@@ -13,6 +13,7 @@ pub struct Camera{
     aspect_ratio: f64,
     image_width: u32,
     image_height: u32,
+    sample_ray_bounce_max: u32,
     samples_per_pixel: u32,
     pixel_samples_scale: f64,
     focal_length: f64,
@@ -34,6 +35,7 @@ impl Camera {
         aspect_ratio: f64,
         image_width: u32,
         samples_per_pixel: u32,
+        sample_ray_bounce_max: u32,
     ) -> Self {
         let pixel_samples_scale = 1.0 / samples_per_pixel as f64;
         let mut image_height: u32 = (image_width as f64 / aspect_ratio) as u32;
@@ -65,6 +67,7 @@ impl Camera {
             aspect_ratio,
             image_width,
             image_height,
+            sample_ray_bounce_max,
             samples_per_pixel,
             pixel_samples_scale, 
             focal_length,
@@ -114,7 +117,7 @@ impl Camera {
                 let mut average_pixel_color_sum: RtVec3 = RtVec3::new(0.0, 0.0, 0.0);
                 for _ in 0..self.samples_per_pixel {
                     let ray = self.get_ray(pixel_w, pixel_h);
-                    average_pixel_color_sum = average_pixel_color_sum + color(ray, &self.world);
+                    average_pixel_color_sum = average_pixel_color_sum + color(ray, &self.world, self.sample_ray_bounce_max);
                 }
                 let average_pixel_color = average_pixel_color_sum * self.pixel_samples_scale;
                 write_color_to_pixel(average_pixel_color, &mut file)?;

@@ -84,7 +84,12 @@ pub fn hit_sphere(
 pub fn color(
     ray: Ray,
     world: &HittableList,
+    sample_ray_bounce_max: u32,
 ) -> RtVec3 {
+    if sample_ray_bounce_max <= 0 {
+        return RtVec3::new(0.0, 0.0, 0.0)
+    }
+
     let mut record: HitRecord = HitRecord::new(
         RtVec3::new(0.0, 0.0, 0.0),
         RtVec3::new(0.0, 0.0, 0.0),
@@ -94,7 +99,7 @@ pub fn color(
     if world.hit(&ray, Interval::new(0.0, f64::INFINITY), &mut record) {
         // return 0.5 * (record.normal + RtVec3::new(1.0, 1.0, 1.0));
         let direction: RtVec3 = RtVec3::random_on_hemisphere(&record.normal);
-        return 0.5 * color(Ray::new(record.p, direction), world);
+        return 0.5 * color(Ray::new(record.p, direction), world, sample_ray_bounce_max - 1);
     }
     let unit_direction = ray.direction().unit_vector();
     let a = 0.5 * (unit_direction.y() + 1.0);
