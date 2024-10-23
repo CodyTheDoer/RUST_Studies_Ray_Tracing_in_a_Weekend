@@ -22,22 +22,6 @@ impl RtVec3 {
             z,
         }
     }
-
-    pub fn random() -> Self {
-        RtVec3 {
-            x: random_float(),
-            y: random_float(),
-            z: random_float(),
-        }
-    }
-
-    pub fn random_interval(interval: Interval) -> Self {
-        RtVec3 {
-            x: random_float_interval(interval.clone()),
-            y: random_float_interval(interval.clone()),
-            z: random_float_interval(interval),
-        }
-    }
     
     pub fn x(&self) -> f64 {
         self.x
@@ -49,6 +33,22 @@ impl RtVec3 {
     
     pub fn z(&self) -> f64 {
         self.z
+    }
+
+    pub fn random() -> Self {
+        RtVec3 {
+            x: random_float(),
+            y: random_float(),
+            z: random_float(),
+        }
+    }
+
+    pub fn random_range(interval: Interval) -> Self {
+        RtVec3 {
+            x: random_float_interval(interval.clone()),
+            y: random_float_interval(interval.clone()),
+            z: random_float_interval(interval),
+        }
     }
     
     // Calculating length squared
@@ -97,6 +97,25 @@ impl RtVec3 {
             panic!("Cannot normalize a zero-length vector");
         }
         *self / uv
+    }
+
+    pub fn random_unit_vector() -> RtVec3 {
+        loop {
+            let p = RtVec3::random_range(Interval::new(-1.0, 1.0));
+            let lensq = p.length_squared();
+            if 1e-160 < lensq && lensq <= 1.0 {
+                return p / lensq.sqrt();
+            }
+        }
+    }
+
+    pub fn random_on_hemisphere(normal: &RtVec3) -> RtVec3 {
+        let on_unit_sphere: RtVec3 = RtVec3::random_unit_vector();
+        if on_unit_sphere.dot(&normal) > 0.0 {
+            on_unit_sphere // In the same hemisphere as the normal
+        } else {
+            -on_unit_sphere // Flip the vector to ensure it's in the correct hemisphere
+        }
     }
 
     pub fn eq(&self, other: &Self) -> bool {
