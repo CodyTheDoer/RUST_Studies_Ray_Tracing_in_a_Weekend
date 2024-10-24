@@ -11,9 +11,7 @@ pub trait Material {
         &self,
         r_in: Ray, 
         rec: HitRecord, 
-        attenuation: Color, 
-        scattered: Ray,
-    ) -> Option<(Ray, Color)>;
+    ) -> Option<(Color, Ray)>;
 }
 
 // Lambertian Logic (Perfect diffusion)
@@ -32,18 +30,16 @@ impl Material for Lambertian {
         &self,
         r_in: Ray, 
         rec: HitRecord, 
-        attenuation: Color, 
-        scattered: Ray,
-    ) -> Option<(Ray, Color)> {
+    ) -> Option<(Color, Ray)> {
         let mut scatter_direction = rec.normal + RtVec3::random_unit_vector();
         if scatter_direction.near_zero() {
             scatter_direction = rec.normal;
         }
 
-        let scattered = Ray::new(rec.p, scatter_direction);
         let attenuation = self.albedo;
+        let scattered = Ray::new(rec.p, scatter_direction);
 
-        Some((scattered, attenuation))
+        Some((attenuation, scattered))
     }
 }
 
@@ -63,14 +59,13 @@ impl Material for Metal {
         &self,
         r_in: Ray, 
         rec: HitRecord, 
-        attenuation: Color, 
-        scattered: Ray,
-    ) -> Option<(Ray, Color)> {
+    ) -> Option<(Color, Ray)> {
         let reflected = RtVec3::reflect(r_in.direction(), rec.normal);
         let scattered = Ray::new(rec.p, reflected);
+        
         let attenuation = self.albedo;
 
-        Some((scattered, attenuation))
+        Some((attenuation, scattered))
     }
 }
 

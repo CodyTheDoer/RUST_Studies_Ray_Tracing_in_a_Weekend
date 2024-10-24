@@ -8,6 +8,7 @@ use crate::rtvec3::{RtVec3, Point3};
 
 use std::fs::File;
 use std::io::Write;
+use std::ops::Mul;
 use std::rc::Rc;
 
 #[derive(Clone, Copy, Debug)]
@@ -63,6 +64,18 @@ impl Color {
     }
 }
 
+impl Mul<RtVec3> for Color {
+    type Output = RtVec3;
+
+    fn mul(self, other: RtVec3) -> RtVec3 {
+        RtVec3 {
+            x: self.r * other.x,
+            y: self.g * other.y,
+            z: self.b * other.z,
+        }
+    }
+}
+
 pub fn hit_sphere(
     center: Point3,
     radius: f64,
@@ -105,13 +118,10 @@ pub fn color(
     );
     // let mut record: HitRecord = HitRecord::empty();
     if world.hit(&ray, Interval::new(0.001, f64::INFINITY), &mut record) {
-        let direction: RtVec3 = *&record.normal + RtVec3::random_unit_vector();
-        return reflectance * color(Ray::new(record.p, direction), world, sample_ray_bounce_max - 1);
-        // ray scattered;
-        // color attenuation;
-        // if (rec.mat->scatter(r, rec, attenuation, scattered))
-        //     return attenuation * ray_color(scattered, depth-1, world);
-        // return color(0,0,0);
+        if let Some((attenuation, scattered)) = record.material.clone().scatter(ray, record) {
+            return attenuation * color(scattered, world, sample_ray_bounce_max - 1);
+        }
+        return RtVec3::new(0.0, 0.0, 0.0);
     }
     let unit_direction = ray.direction().unit_vector();
     let a = 0.5 * (unit_direction.y() + 1.0);
