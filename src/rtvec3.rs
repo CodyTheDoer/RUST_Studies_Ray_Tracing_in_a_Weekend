@@ -4,7 +4,7 @@ use crate::{random_float, random_float_interval};
 use std::ops::{Add, Sub, Mul, Div, Neg};
 use rand::prelude::*;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
 pub struct RtVec3{
     pub x: f64,
     pub y: f64,

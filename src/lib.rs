@@ -1,12 +1,14 @@
 pub mod camera;
-pub mod hit; 
+pub mod hit;
+pub mod material; 
 pub mod ray;
-pub mod rtvec3; 
+pub mod rtvec3;
 
-pub use hit::{Hittable, HittableList, HitRecord};
-pub use ray::{Ray, RayColor};
-pub use ray::{write_color_to_pixel, color};
-pub use rtvec3::{Point3, RtVec3};
+use hit::{Hittable, HittableList, HitRecord};
+use material::default_material;
+use ray::{Ray, Color};
+use ray::{write_color_to_pixel, color};
+use rtvec3::{Point3, RtVec3};
 
 use rand::prelude::*;
 

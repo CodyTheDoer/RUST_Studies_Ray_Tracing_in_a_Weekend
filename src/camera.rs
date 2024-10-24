@@ -1,15 +1,18 @@
-use crate::ray::{Ray, RayColor};
-use crate::ray::{write_color_to_pixel, color};
-use crate::rtvec3::{Point3, RtVec3};
-use crate::hit::HittableList;
 use crate::sample_square;
+
+use crate::ray::{Ray, Color};
+use crate::ray::{write_color_to_pixel, color};
+
+use crate::rtvec3::{Point3, RtVec3};
+
+use crate::hit::HittableList;
 
 use std::fs::File;
 use std::io::Write;
 
 pub struct Camera{
     world: HittableList,
-    ray_color: RayColor,
+    ray_color: Color,
     aspect_ratio: f64,
     image_width: u32,
     image_height: u32,
@@ -31,7 +34,7 @@ pub struct Camera{
 impl Camera {
     pub fn new(
         world: HittableList,
-        ray_color: RayColor,
+        ray_color: Color,
         aspect_ratio: f64,
         image_width: u32,
         samples_per_pixel: u32,

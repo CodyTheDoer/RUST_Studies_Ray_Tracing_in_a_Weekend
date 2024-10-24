@@ -1,26 +1,32 @@
-use crate::rtvec3::{Point3, RtVec3};
-use crate::ray::Ray;
 use crate::Interval;
+
+use crate::material::Material;
+use crate::default_material;
+
+use crate::ray::Ray;
+
+use crate::rtvec3::{Point3, RtVec3};
 
 use std::rc::Rc;
 
 // Hit Record 
-
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone)]
 pub struct HitRecord {
     pub p: Point3,
     pub normal: RtVec3,
     pub t: f64,
     pub front_face: bool,
+    pub material: Rc<dyn Material>,
 }
 
 impl HitRecord {
-    pub fn new(p: Point3, normal: RtVec3, t: f64, front_face: bool) -> Self {
+    pub fn new(p: Point3, normal: RtVec3, t: f64, front_face: bool, material: Rc<dyn Material>) -> Self {
         HitRecord {
             p,
             normal,
             t,
             front_face,
+            material,
         }
     }
 
@@ -83,7 +89,8 @@ impl Hittable for HittableList {
         interval: Interval,
         record: &mut HitRecord,
     ) -> bool {
-        let mut temp_record = HitRecord::new(Point3::new(0.0, 0.0, 0.0), RtVec3::new(0.0, 0.0, 0.0), 0.0, false);
+        let default_material = default_material();
+        let mut temp_record = HitRecord::new(Point3::new(0.0, 0.0, 0.0), RtVec3::new(0.0, 0.0, 0.0), 0.0, false, Rc::clone(&default_material));
         let mut hit_anything: bool = false;
         let mut closest_so_far = interval.max;
 
@@ -101,17 +108,19 @@ impl Hittable for HittableList {
 
 // Geometry: Sphere
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone)]
 pub struct Sphere {
     pub center: Point3,
     pub radius: f64,
+    pub material: Rc<dyn Material>,
 }
 
 impl Sphere {
-    pub fn new(center: Point3, radius: f64) -> Sphere {
+    pub fn new(center: Point3, radius: f64, material: Rc<dyn Material>) -> Sphere {
         Sphere {
             center,
             radius,
+            material,
         }
     }
 }
@@ -147,6 +156,7 @@ impl Hittable for Sphere {
         record.p = ray.at(record.t);
         record.normal = (record.p - self.center) / self.radius;
         record.set_face_normal(ray, record.normal);
+        record.material = Rc::clone(&self.material);
         
         true
     }

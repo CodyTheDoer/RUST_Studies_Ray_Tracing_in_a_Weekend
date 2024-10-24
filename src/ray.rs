@@ -1,9 +1,14 @@
-use crate::rtvec3::{RtVec3, Point3};
-use crate::hit::{Hittable, HittableList, HitRecord};
 use crate::Interval;
+
+use crate::hit::{Hittable, HittableList, HitRecord};
+
+use crate::material::default_material;
+
+use crate::rtvec3::{RtVec3, Point3};
 
 use std::fs::File;
 use std::io::Write;
+use std::rc::Rc;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Ray {
@@ -34,15 +39,15 @@ impl Ray {
 }
 
 #[derive(Clone, Copy, Debug)]
-pub struct RayColor {
+pub struct Color {
     pub r: f64,
     pub g: f64,
     pub b: f64,
 }
 
-impl RayColor {
+impl Color {
     pub fn new_rgb(r: f64, g: f64, b: f64) -> Self {
-        RayColor {
+        Color {
             r,
             g,
             b,
@@ -50,7 +55,7 @@ impl RayColor {
     }
 
     pub fn from_vec(color: RtVec3) -> Self {
-        RayColor {
+        Color {
             r: color.x(),
             g: color.y(),
             b: color.z(),
@@ -87,15 +92,18 @@ pub fn color(
     sample_ray_bounce_max: u32,
 ) -> RtVec3 {
     if sample_ray_bounce_max <= 0 {
-        return RtVec3::new(0.0, 0.0, 0.0)
+        return RtVec3::new(0.0, 0.0, 0.0);
     }
     let reflectance = 0.5;
+    let default_material = default_material();
     let mut record: HitRecord = HitRecord::new(
         RtVec3::new(0.0, 0.0, 0.0),
         RtVec3::new(0.0, 0.0, 0.0),
         0.0,
         false,
+        Rc::clone(&default_material),
     );
+    // let mut record: HitRecord = HitRecord::empty();
     if world.hit(&ray, Interval::new(0.001, f64::INFINITY), &mut record) {
         let direction: RtVec3 = *&record.normal + RtVec3::random_unit_vector();
         return reflectance * color(Ray::new(record.p, direction), world, sample_ray_bounce_max - 1);
