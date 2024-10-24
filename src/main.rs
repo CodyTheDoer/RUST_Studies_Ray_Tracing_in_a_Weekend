@@ -2,7 +2,7 @@ use raytracing_in_a_weekend::camera::Camera;
 use raytracing_in_a_weekend::rtvec3::Point3;
 use raytracing_in_a_weekend::hit::{HittableList, Sphere};
 use raytracing_in_a_weekend::ray::Color;
-use raytracing_in_a_weekend::material::default_material;
+use raytracing_in_a_weekend::material::{default_material, new_material};
 
 use std::rc::Rc;
 
