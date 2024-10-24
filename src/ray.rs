@@ -107,6 +107,11 @@ pub fn color(
     if world.hit(&ray, Interval::new(0.001, f64::INFINITY), &mut record) {
         let direction: RtVec3 = *&record.normal + RtVec3::random_unit_vector();
         return reflectance * color(Ray::new(record.p, direction), world, sample_ray_bounce_max - 1);
+        // ray scattered;
+        // color attenuation;
+        // if (rec.mat->scatter(r, rec, attenuation, scattered))
+        //     return attenuation * ray_color(scattered, depth-1, world);
+        // return color(0,0,0);
     }
     let unit_direction = ray.direction().unit_vector();
     let a = 0.5 * (unit_direction.y() + 1.0);

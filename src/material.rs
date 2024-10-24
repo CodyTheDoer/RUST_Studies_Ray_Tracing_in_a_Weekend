@@ -16,6 +16,7 @@ pub trait Material {
     ) -> Option<(Ray, Color)>;
 }
 
+// Lambertian Logic (Perfect diffusion)
 pub struct Lambertian {
     pub albedo: Color,
 }
@@ -46,24 +47,36 @@ impl Material for Lambertian {
     }
 }
 
+// Metal Logic (Perfect Reflection, I think)
+pub struct Metal {
+    pub albedo: Color,
+}
+
+impl Metal {
+    pub fn new(albedo: Color) -> Self {
+        Metal {albedo}
+    }
+}
+
+impl Material for Metal {
+    fn scatter(
+        &self,
+        r_in: Ray, 
+        rec: HitRecord, 
+        attenuation: Color, 
+        scattered: Ray,
+    ) -> Option<(Ray, Color)> {
+        let reflected = RtVec3::reflect(r_in.direction(), rec.normal);
+        let scattered = Ray::new(rec.p, reflected);
+        let attenuation = self.albedo;
+
+        Some((scattered, attenuation))
+    }
+}
+
+// Material Defaults, considering changing to setup()
 pub fn default_material() -> Rc<dyn Material> {
     Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5)))
 }
-
-// class lambertian : public material {
-// public:
-//     lambertian(const color& albedo) : albedo(albedo) {}
-
-//     bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)
-//     const override {
-//         auto scatter_direction = rec.normal + random_unit_vector();
-//         scattered = ray(rec.p, scatter_direction);
-//         attenuation = albedo;
-//         return true;
-//     }
-
-// private:
-//     color albedo;
-// };
 
   
