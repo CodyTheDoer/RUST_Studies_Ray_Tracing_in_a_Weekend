@@ -116,7 +116,6 @@ pub fn color(
         false,
         Rc::clone(&default_material),
     );
-    // let mut record: HitRecord = HitRecord::empty();
     if world.hit(&ray, Interval::new(0.001, f64::INFINITY), &mut record) {
         if let Some((attenuation, scattered)) = record.material.clone().scatter(ray, record) {
             return attenuation * color(scattered, world, sample_ray_bounce_max - 1);

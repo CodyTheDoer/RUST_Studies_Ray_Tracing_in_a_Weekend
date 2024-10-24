@@ -74,4 +74,20 @@ pub fn default_material() -> Rc<dyn Material> {
     Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5)))
 }
 
+pub fn default_material_lambertian() -> Rc<dyn Material> {
+    Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5)))
+}
+
+pub fn new_material_lambertian(r: f64, g: f64, b: f64) -> Rc<dyn Material> {
+    Rc::new(Lambertian::new(Color::new_rgb(r, g, b)))
+}
+
+pub fn default_material_metal() -> Rc<dyn Material> {
+    Rc::new(Metal::new(Color::new_rgb(0.5, 0.5, 0.5)))
+}
+
+pub fn new_material_metal(r: f64, g: f64, b: f64) -> Rc<dyn Material> {
+    Rc::new(Metal::new(Color::new_rgb(r, g, b)))
+}
+
   
