@@ -61,6 +61,12 @@ impl RtVec3 {
         self.length_squared().sqrt()
     }
 
+    pub fn near_zero(&self) -> bool {
+        // Return true if the vector is close to zero in all dimensions.
+        let s = 1e-8;
+        self.x < s && self.y < s && self.z < s
+    }
+
     // Scalar multiplication
     pub fn multiply_scalar(&self, t: f64) -> RtVec3 {
         RtVec3 {
@@ -116,6 +122,10 @@ impl RtVec3 {
         } else {
             -on_unit_sphere // Flip the vector to ensure it's in the correct hemisphere
         }
+    }
+
+    pub fn reflect(v: RtVec3, n: RtVec3) -> RtVec3 {
+        v - 2.0 * v.dot(&n) * n
     }
 
     pub fn eq(&self, other: &Self) -> bool {

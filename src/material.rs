@@ -26,10 +26,6 @@ impl Lambertian {
     }
 }
 
-pub fn default_material() -> Rc<dyn Material> {
-    Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5)))
-}
-
 impl Material for Lambertian {
     fn scatter(
         &self,
@@ -39,7 +35,7 @@ impl Material for Lambertian {
         scattered: Ray,
     ) -> Option<(Ray, Color)> {
         let mut scatter_direction = rec.normal + RtVec3::random_unit_vector();
-        if scatter_direction < RtVec3::new(0.001, 0.001, 0.001) {
+        if scatter_direction.near_zero() {
             scatter_direction = rec.normal;
         }
 
@@ -48,6 +44,10 @@ impl Material for Lambertian {
 
         Some((scattered, attenuation))
     }
+}
+
+pub fn default_material() -> Rc<dyn Material> {
+    Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5)))
 }
 
 // class lambertian : public material {

@@ -94,6 +94,30 @@ mod rtvec3_tests {
         let uv: RtVec3 = v1.unit_vector();
         assert!(known_uv == uv);
     }
+
+    #[test]
+    fn test_random_on_hemisphere() {
+        let normal = RtVec3::new(0.0, 1.0, 0.0); // Use a simple upward pointing normal vector
+
+        // Run multiple tests to check if generated vectors are in the correct hemisphere
+        for _ in 0..100 {
+            let random_vec = random_on_hemisphere(&normal);
+            
+            // Calculate the dot product to check if the vector is in the correct hemisphere
+            let dot_product = random_vec.dot(&normal);
+
+            // Assert that the dot product is non-negative, meaning in the same hemisphere
+            assert!(dot_product >= 0.0, "Random vector is not in the same hemisphere as the normal.");
+        }
+    }
+
+    #[test]
+    fn test_reflect() {
+        let v = RtVec3::new(1.0, -1.0, 0.0);
+        let n = RtVec3::new(0.0, 1.0, 0.0); // Reflect over y-axis
+        let reflected = reflect(v, n);
+        assert_eq!(reflected, RtVec3::new(1.0, 1.0, 0.0));
+    }
     
     #[test]
     fn neg() {

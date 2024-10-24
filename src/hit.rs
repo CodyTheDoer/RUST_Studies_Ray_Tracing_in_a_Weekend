@@ -107,7 +107,6 @@ impl Hittable for HittableList {
 }
 
 // Geometry: Sphere
-
 #[derive(Clone)]
 pub struct Sphere {
     pub center: Point3,
