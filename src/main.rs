@@ -26,7 +26,7 @@ fn main() {
 
     let material_center   = new_material_lambertian_color(albedo_blue_gray);
     let material_ground  = new_material_lambertian_color(albedo_green_mountain_dew);
-    let material_left = new_material_dielectric(1.0 / 1.33); // air bubble (i_r_air / i_r_water)
+    let material_left = new_material_dielectric(1.5);
     let material_right = new_material_metal_color(albedo_gold, 1.0);
 
     let sphere_ground = Rc::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, Rc::clone(&material_ground)));

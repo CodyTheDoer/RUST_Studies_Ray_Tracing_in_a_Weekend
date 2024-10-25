@@ -4,6 +4,8 @@ use crate::ray::{Ray, Color};
 
 use crate::rtvec3::RtVec3;
 
+use crate::random_float;
+
 use std::rc::Rc;
 
 pub trait Material {
@@ -96,7 +98,21 @@ impl Dielectric {
             refraction_index,
         }
     }
+
+    pub fn reflectance(cosine: f64, refraction_index: f64) -> f64 {
+        // Schlick's approximation for reflectance.
+        let mut r0: f64 = (1.0 - refraction_index) / (1.0 + refraction_index);
+        r0 = r0 * r0;
+        r0 + (1.0 - r0) * (1.0 - cosine).powf(5.0)
+    }
 }
+
+// static double reflectance(double cosine, double refraction_index) {
+//     // Use Schlick's approximation for reflectance.
+//     auto r0 = (1 - refraction_index) / (1 + refraction_index);
+//     r0 = r0*r0;
+//     return r0 + (1-r0)*std::pow((1 - cosine),5);
+// }
 
 impl Material for Dielectric {
     fn scatter(
@@ -117,7 +133,7 @@ impl Material for Dielectric {
         let cannot_refract: bool = ri * sin_theta > 1.0;
 
         let mut direction: RtVec3 = RtVec3::new(0.0, 0.0, 0.0);
-        if cannot_refract {
+        if cannot_refract || Dielectric::reflectance(cos_theta, ri) > random_float() {
             direction = RtVec3::reflect(unit_direction, rec.normal)
         } else {
             direction = RtVec3::refract(unit_direction, rec.normal, ri)
