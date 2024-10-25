@@ -43,7 +43,7 @@ impl Material for Lambertian {
     }
 }
 
-// Metal Logic (Perfect Reflection, I think)
+// Metal Logic
 pub struct Metal {
     pub albedo: Color,
     pub fuzz: f64,
@@ -83,11 +83,48 @@ impl Material for Metal {
     }
 }
 
+// Metal Logic
+pub struct Dielectric {
+    pub albedo: Color,
+    pub refraction_index: f64,
+}
+
+impl Dielectric {
+    pub fn new(albedo: Color, refraction_index: f64) -> Self {
+        Dielectric {
+            albedo,
+            refraction_index,
+        }
+    }
+}
+
+impl Material for Dielectric {
+    fn scatter(
+        &self,
+        r_in: Ray, 
+        rec: HitRecord, 
+    ) -> Option<(Color, Ray)> {
+        let attenuation = self.albedo;
+        let ri: f64 = if rec.front_face {
+            1.0 / self.refraction_index
+        } else {
+            self.refraction_index
+        };
+
+        let unit_direction: RtVec3 = RtVec3::unit_vector(&r_in.direction());
+        let refracted: RtVec3 = RtVec3::refract(unit_direction, rec.normal, ri);
+
+        let scattered = Ray::new(rec.p, refracted);
+        Some((attenuation, scattered))
+    }
+}
+
 // Material Defaults, considering changing to setup()
 pub fn default_material() -> Rc<dyn Material> {
     Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5)))
 }
 
+// Material: Lambertian
 pub fn default_material_lambertian() -> Rc<dyn Material> {
     Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5))) 
 }
@@ -100,6 +137,7 @@ pub fn new_material_lambertian_float(r: f64, g: f64, b: f64) -> Rc<dyn Material>
     Rc::new(Lambertian::new(Color::new_rgb(r, g, b)))
 }
 
+// Material Metal
 pub fn default_material_metal() -> Rc<dyn Material> {
     Rc::new(Metal::new(Color::new_rgb(0.5, 0.5, 0.5), 0.5))
 }
@@ -110,6 +148,23 @@ pub fn new_material_metal(color: Color, fuzz: f64) -> Rc<dyn Material> {
 
 pub fn new_material_metal_float(r: f64, g: f64, b: f64, fuzz: f64) -> Rc<dyn Material> {
     Rc::new(Metal::new(Color::new_rgb(r, g, b), fuzz))
+}
+
+// Material Dielectric
+pub fn default_material_dielectric() -> Rc<dyn Material> { // Full refraction
+    Rc::new(Metal::new(Color::new_rgb(1.0, 1.0, 1.0), 1.5))
+}
+
+pub fn new_material_dielectric(refraction: f64) -> Rc<dyn Material> {
+    Rc::new(Metal::new(Color::new_rgb(1.0, 1.0, 1.0), refraction))
+}
+
+pub fn new_material_dielectric_color(color: Color, refraction: f64) -> Rc<dyn Material> {
+    Rc::new(Metal::new(color, refraction))
+}
+
+pub fn new_material_dielectric_color_float(r: f64, g: f64, b: f64, refraction: f64) -> Rc<dyn Material> {
+    Rc::new(Metal::new(Color::new_rgb(r, g, b), refraction))
 }
 
   

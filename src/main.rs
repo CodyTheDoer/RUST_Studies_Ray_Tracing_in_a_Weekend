@@ -3,9 +3,10 @@ use raytracing_in_a_weekend::rtvec3::Point3;
 use raytracing_in_a_weekend::hit::{HittableList, Sphere};
 use raytracing_in_a_weekend::ray::Color;
 use raytracing_in_a_weekend::material::{
-    default_material, default_material_lambertian, default_material_metal, 
-    new_material_lambertian, new_material_lambertian_float, new_material_metal_float, 
-    new_material_metal
+    default_material, 
+    default_material_lambertian,    new_material_lambertian,    new_material_lambertian_float, 
+    default_material_metal,         new_material_metal,         new_material_metal_float,
+    default_material_dielectric,    new_material_dielectric,    new_material_dielectric_color,  new_material_dielectric_color_float,
 };
 
 use std::rc::Rc;
@@ -29,7 +30,7 @@ fn main() {
     let material_ground  = new_material_lambertian(albedo_green_mountain_dew);
 
     // Build (color: Color, fuzz: f64)
-    let material_left = new_material_metal(albedo_silver, 0.3);
+    let material_left = new_material_dielectric(1.5);
     let material_right = new_material_metal(albedo_gold, 1.0);
 
     let sphere_ground = Rc::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, Rc::clone(&material_ground)));

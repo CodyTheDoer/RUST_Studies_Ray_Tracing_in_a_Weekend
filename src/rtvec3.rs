@@ -2,6 +2,7 @@ use crate::Interval;
 use crate::{random_float, random_float_interval};
 
 use std::ops::{Add, Sub, Mul, Div, Neg};
+use std::cmp;
 use rand::prelude::*;
 
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
@@ -126,6 +127,17 @@ impl RtVec3 {
 
     pub fn reflect(v: RtVec3, n: RtVec3) -> RtVec3 {
         v - 2.0 * v.dot(&n) * n
+    }
+
+    pub fn refract(
+        uv: RtVec3,
+        n: RtVec3,
+        etai_over_etat: f64,
+    ) -> RtVec3 {
+        let cos_theta = f64::min(-uv.dot(&n), 1.0);
+        let r_out_perp: RtVec3 =  etai_over_etat * (uv + (cos_theta * n));
+        let r_out_parallel: RtVec3 = -(1.0 - r_out_perp.length_squared().abs()).sqrt() * n;
+        r_out_perp + r_out_parallel
     }
 
     pub fn eq(&self, other: &Self) -> bool {
