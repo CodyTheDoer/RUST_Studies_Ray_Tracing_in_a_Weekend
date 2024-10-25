@@ -1,11 +1,11 @@
-use crate::sample_square;
-
 use crate::ray::{Ray, Color};
 use crate::ray::{write_color_to_pixel, color};
 
 use crate::rtvec3::{Point3, RtVec3};
 
 use crate::hit::HittableList;
+
+use crate::{degrees_to_radians, sample_square};
 
 use std::fs::File;
 use std::io::Write;
@@ -14,6 +14,7 @@ pub struct Camera{
     world: HittableList,
     ray_color: Color,
     aspect_ratio: f64,
+    fov: f64,
     image_width: u32,
     image_height: u32,
     sample_ray_bounce_max: u32,
@@ -36,6 +37,7 @@ impl Camera {
         world: HittableList,
         ray_color: Color,
         aspect_ratio: f64,
+        fov: f64,
         image_width: u32,
         samples_per_pixel: u32,
         sample_ray_bounce_max: u32,
@@ -48,7 +50,12 @@ impl Camera {
     
         // Camera Viewport Data
         let focal_length: f64 = 1.0;
-        let viewport_height: f64 = 2.0;
+        // let viewport_height: f64 = 2.0;
+        
+        let theta: f64 = degrees_to_radians(fov);
+        let h: f64 = f64::tan(theta / 2.0);
+        let viewport_height: f64 = 2.0 * h * focal_length;
+        
         let viewport_width: f64  = viewport_height * (image_width as f64 / image_height as f64);
         let camera_center: Point3 = Point3::new(0.0, 0.0, 0.0);
     
@@ -68,6 +75,7 @@ impl Camera {
             world,
             ray_color,
             aspect_ratio,
+            fov,
             image_width,
             image_height,
             sample_ray_bounce_max,
