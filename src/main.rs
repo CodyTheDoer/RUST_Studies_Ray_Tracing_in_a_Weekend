@@ -1,5 +1,5 @@
 use raytracing_in_a_weekend::camera::Camera;
-use raytracing_in_a_weekend::rtvec3::Point3;
+use raytracing_in_a_weekend::rtvec3::{Point3, RtVec3};
 use raytracing_in_a_weekend::hit::{HittableList, Sphere};
 use raytracing_in_a_weekend::ray::Color;
 use raytracing_in_a_weekend::material::{
@@ -11,13 +11,23 @@ use raytracing_in_a_weekend::material::{
 use std::rc::Rc;
 
 fn main() {
+    // World Parameters
     let mut world_objects: HittableList = HittableList::new();
-    let ray_color: Color = Color::new_rgb(0.0, 0.0, 0.0);
+
+    // Image Parameters
     let aspect_ratio: f64 = 16.0 / 9.0;
     let image_width: u32 = 400;
     let samples_per_pixel: u32 = 100;
+    
+    // Ray Parameters
+    let ray_color: Color = Color::new_rgb(0.0, 0.0, 0.0);
     let sample_ray_bounce_max: u32 = 10;
-    let fov: f64 = 50.0;
+
+    // Camera Parameters
+    let fov: f64 = 90.0;
+    let lookfrom: Point3 = Point3::new(-2.0, 2.0, 1.0);  // Point camera is looking from
+    let lookat: Point3 = Point3::new(0.0, 0.0, -1.0);   // Point camera is looking at
+    let vup: RtVec3 = RtVec3::new(0.0, 1.0, 0.0);       // Camera-relative "up" direction
 
     // Build Colors
     let albedo_silver = Color::new_rgb(0.8, 0.8, 0.8);
@@ -47,7 +57,18 @@ fn main() {
     world_objects.add(sphere_right);
 
     // Start the camera, passing in world and variables
-    let cam: Camera = Camera::new(world_objects, ray_color, aspect_ratio, fov, image_width, samples_per_pixel, sample_ray_bounce_max);
+    let cam: Camera = Camera::new(
+        world_objects, 
+        ray_color, 
+        aspect_ratio, 
+        fov, 
+        lookfrom, 
+        lookat, 
+        vup, 
+        image_width, 
+        samples_per_pixel, 
+        sample_ray_bounce_max
+    );
 
     cam.render();
 }

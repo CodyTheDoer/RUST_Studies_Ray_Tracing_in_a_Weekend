@@ -15,6 +15,9 @@ pub struct Camera{
     ray_color: Color,
     aspect_ratio: f64,
     fov: f64,
+    lookfrom: Point3,
+    lookat: Point3,
+    vup: RtVec3,
     image_width: u32,
     image_height: u32,
     sample_ray_bounce_max: u32,
@@ -38,37 +41,45 @@ impl Camera {
         ray_color: Color,
         aspect_ratio: f64,
         fov: f64,
+        lookfrom: Point3,
+        lookat: Point3,
+        vup: RtVec3,
         image_width: u32,
         samples_per_pixel: u32,
         sample_ray_bounce_max: u32,
     ) -> Self {
-        let pixel_samples_scale = 1.0 / samples_per_pixel as f64;
         let mut image_height: u32 = (image_width as f64 / aspect_ratio) as u32;
         if image_height < 1 {
             image_height = 1;
         }
-    
+
         // Camera Viewport Data
-        let focal_length: f64 = 1.0;
-        // let viewport_height: f64 = 2.0;
-        
+        let camera_center: Point3 = lookfrom;
+        let pixel_samples_scale = 1.0 / samples_per_pixel as f64;
+    
+        let look_sum: Point3 = lookfrom - lookat;
+        let focal_length: f64 = look_sum.length();        
         let theta: f64 = degrees_to_radians(fov);
         let h: f64 = f64::tan(theta / 2.0);
+
         let viewport_height: f64 = 2.0 * h * focal_length;
-        
         let viewport_width: f64  = viewport_height * (image_width as f64 / image_height as f64);
-        let camera_center: Point3 = Point3::new(0.0, 0.0, 0.0);
     
+        // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+        let w = look_sum.unit_vector();
+        let u = vup.cross(&w).unit_vector();
+        let v = w.cross(&u);
+
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
-        let viewport_u: RtVec3 = RtVec3::new(viewport_width, 0.0, 0.0);
-        let viewport_v: RtVec3 = RtVec3::new(0.0, -viewport_height, 0.0);
+        let viewport_u: RtVec3 = viewport_width * u;
+        let viewport_v: RtVec3 = viewport_height * -v;
     
         // Calculate the horizontal and vertical delta vectors from pixel to pixel.
         let pixel_delta_u: RtVec3 = viewport_u / image_width as f64;
         let pixel_delta_v: RtVec3 = viewport_v / image_height as f64;
     
         // Calculate the location of the upper left pixel.
-        let viewport_upper_left: RtVec3 = camera_center - RtVec3::new(0.0, 0.0, focal_length) - viewport_u / 2.0 - viewport_v / 2.0;
+        let viewport_upper_left: RtVec3 = camera_center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
         let pixel_00_loc: RtVec3 = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
     
         Camera{
@@ -76,6 +87,9 @@ impl Camera {
             ray_color,
             aspect_ratio,
             fov,
+            lookfrom,
+            lookat,
+            vup,
             image_width,
             image_height,
             sample_ray_bounce_max,
