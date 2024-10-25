@@ -125,15 +125,15 @@ pub fn default_material() -> Rc<dyn Material> {
 }
 
 // Material: Lambertian
-pub fn default_material_lambertian() -> Rc<dyn Material> {
+pub fn new_material_lambertian() -> Rc<dyn Material> {
     Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5))) 
 }
 
-pub fn new_material_lambertian(color: Color) -> Rc<dyn Material> {
+pub fn new_material_lambertian_color(color: Color) -> Rc<dyn Material> {
     Rc::new(Lambertian::new(color))
 }
 
-pub fn new_material_lambertian_float(r: f64, g: f64, b: f64) -> Rc<dyn Material> {
+pub fn new_material_lambertian_color_float(r: f64, g: f64, b: f64) -> Rc<dyn Material> {
     Rc::new(Lambertian::new(Color::new_rgb(r, g, b)))
 }
 
@@ -142,7 +142,11 @@ pub fn default_material_metal() -> Rc<dyn Material> {
     Rc::new(Metal::new(Color::new_rgb(0.5, 0.5, 0.5), 0.5))
 }
 
-pub fn new_material_metal(color: Color, fuzz: f64) -> Rc<dyn Material> {
+pub fn new_material_metal(fuzz: f64) -> Rc<dyn Material> {
+    Rc::new(Metal::new(Color::new_rgb(0.5, 0.5, 0.5), fuzz))
+}
+
+pub fn new_material_metal_color(color: Color, fuzz: f64) -> Rc<dyn Material> {
     Rc::new(Metal::new(Color::new_rgb(color.r, color.g, color.b), fuzz))
 }
 
@@ -152,19 +156,19 @@ pub fn new_material_metal_float(r: f64, g: f64, b: f64, fuzz: f64) -> Rc<dyn Mat
 
 // Material Dielectric
 pub fn default_material_dielectric() -> Rc<dyn Material> { // Full refraction
-    Rc::new(Metal::new(Color::new_rgb(1.0, 1.0, 1.0), 1.5))
+    Rc::new(Dielectric::new(Color::new_rgb(1.0, 1.0, 1.0), 1.5))
 }
 
 pub fn new_material_dielectric(refraction: f64) -> Rc<dyn Material> {
-    Rc::new(Metal::new(Color::new_rgb(1.0, 1.0, 1.0), refraction))
+    Rc::new(Dielectric::new(Color::new_rgb(1.0, 1.0, 1.0), refraction))
 }
 
 pub fn new_material_dielectric_color(color: Color, refraction: f64) -> Rc<dyn Material> {
-    Rc::new(Metal::new(color, refraction))
+    Rc::new(Dielectric::new(color, refraction))
 }
 
 pub fn new_material_dielectric_color_float(r: f64, g: f64, b: f64, refraction: f64) -> Rc<dyn Material> {
-    Rc::new(Metal::new(Color::new_rgb(r, g, b), refraction))
+    Rc::new(Dielectric::new(Color::new_rgb(r, g, b), refraction))
 }
 
   

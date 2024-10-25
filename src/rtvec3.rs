@@ -136,7 +136,7 @@ impl RtVec3 {
     ) -> RtVec3 {
         let cos_theta = f64::min(-uv.dot(&n), 1.0);
         let r_out_perp: RtVec3 =  etai_over_etat * (uv + (cos_theta * n));
-        let r_out_parallel: RtVec3 = -(1.0 - r_out_perp.length_squared().abs()).sqrt() * n;
+        let r_out_parallel: RtVec3 = -f64::sqrt(f64::abs(1.0 - r_out_perp.length_squared())) * n;
         r_out_perp + r_out_parallel
     }
 

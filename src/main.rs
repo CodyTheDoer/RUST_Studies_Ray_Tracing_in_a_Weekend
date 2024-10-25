@@ -3,9 +3,8 @@ use raytracing_in_a_weekend::rtvec3::Point3;
 use raytracing_in_a_weekend::hit::{HittableList, Sphere};
 use raytracing_in_a_weekend::ray::Color;
 use raytracing_in_a_weekend::material::{
-    default_material, 
-    default_material_lambertian,    new_material_lambertian,    new_material_lambertian_float, 
-    default_material_metal,         new_material_metal,         new_material_metal_float,
+    default_material_lambertian,    new_material_lambertian,    new_material_lambertian_color,  new_material_lambertian_color_float, 
+    default_material_metal,         new_material_metal,         new_material_metal_color,       new_material_metal_color_float,
     default_material_dielectric,    new_material_dielectric,    new_material_dielectric_color,  new_material_dielectric_color_float,
 };
 
