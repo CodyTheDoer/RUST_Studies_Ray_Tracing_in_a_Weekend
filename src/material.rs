@@ -112,19 +112,29 @@ impl Material for Dielectric {
         };
 
         let unit_direction: RtVec3 = RtVec3::unit_vector(&r_in.direction());
-        let refracted: RtVec3 = RtVec3::refract(unit_direction, rec.normal, ri);
+        let cos_theta: f64 = f64::min(-unit_direction.dot(&rec.normal), 1.0);
+        let sin_theta: f64 = f64::sqrt(1.0 - cos_theta * cos_theta);
+        let cannot_refract: bool = ri * sin_theta > 1.0;
 
-        let scattered = Ray::new(rec.p, refracted);
+        let mut direction: RtVec3 = RtVec3::new(0.0, 0.0, 0.0);
+        if cannot_refract {
+            direction = RtVec3::reflect(unit_direction, rec.normal)
+        } else {
+            direction = RtVec3::refract(unit_direction, rec.normal, ri)
+        };
+        let scattered = Ray::new(rec.p, direction);
+
         Some((attenuation, scattered))
     }
 }
 
-// Material Defaults, considering changing to setup()
-pub fn default_material() -> Rc<dyn Material> {
+// Material Defaults
+
+    // Material: Lambertian
+pub fn default_material_lambertian() -> Rc<dyn Material> {
     Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5)))
 }
 
-// Material: Lambertian
 pub fn new_material_lambertian() -> Rc<dyn Material> {
     Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5))) 
 }
@@ -137,7 +147,7 @@ pub fn new_material_lambertian_color_float(r: f64, g: f64, b: f64) -> Rc<dyn Mat
     Rc::new(Lambertian::new(Color::new_rgb(r, g, b)))
 }
 
-// Material Metal
+    // Material Metal
 pub fn default_material_metal() -> Rc<dyn Material> {
     Rc::new(Metal::new(Color::new_rgb(0.5, 0.5, 0.5), 0.5))
 }
@@ -150,11 +160,11 @@ pub fn new_material_metal_color(color: Color, fuzz: f64) -> Rc<dyn Material> {
     Rc::new(Metal::new(Color::new_rgb(color.r, color.g, color.b), fuzz))
 }
 
-pub fn new_material_metal_float(r: f64, g: f64, b: f64, fuzz: f64) -> Rc<dyn Material> {
+pub fn new_material_metal_color_float(r: f64, g: f64, b: f64, fuzz: f64) -> Rc<dyn Material> {
     Rc::new(Metal::new(Color::new_rgb(r, g, b), fuzz))
 }
 
-// Material Dielectric
+    // Material Dielectric
 pub fn default_material_dielectric() -> Rc<dyn Material> { // Full refraction
     Rc::new(Dielectric::new(Color::new_rgb(1.0, 1.0, 1.0), 1.5))
 }

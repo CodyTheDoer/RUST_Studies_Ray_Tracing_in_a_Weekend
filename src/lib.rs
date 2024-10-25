@@ -5,7 +5,7 @@ pub mod ray;
 pub mod rtvec3;
 
 use hit::{Hittable, HittableList, HitRecord};
-use material::default_material;
+// use material::default_material_lambertian;
 use ray::{Ray, Color};
 use ray::{write_color_to_pixel, color};
 use rtvec3::{Point3, RtVec3};

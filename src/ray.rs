@@ -2,7 +2,7 @@ use crate::Interval;
 
 use crate::hit::{Hittable, HittableList, HitRecord};
 
-use crate::material::default_material;
+use crate::material::default_material_lambertian;
 
 use crate::rtvec3::{RtVec3, Point3};
 
@@ -108,7 +108,7 @@ pub fn color(
         return RtVec3::new(0.0, 0.0, 0.0);
     }
     let reflectance = 0.5;
-    let default_material = default_material();
+    let default_material = default_material_lambertian();
     let mut record: HitRecord = HitRecord::new(
         RtVec3::new(0.0, 0.0, 0.0),
         RtVec3::new(0.0, 0.0, 0.0),

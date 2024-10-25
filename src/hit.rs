@@ -1,7 +1,7 @@
 use crate::Interval;
 
 use crate::material::Material;
-use crate::default_material;
+use crate::material::default_material_lambertian;
 
 use crate::ray::Ray;
 
@@ -89,7 +89,7 @@ impl Hittable for HittableList {
         interval: Interval,
         record: &mut HitRecord,
     ) -> bool {
-        let default_material = default_material();
+        let default_material = default_material_lambertian();
         let mut temp_record = HitRecord::new(Point3::new(0.0, 0.0, 0.0), RtVec3::new(0.0, 0.0, 0.0), 0.0, false, Rc::clone(&default_material));
         let mut hit_anything: bool = false;
         let mut closest_so_far = interval.max;

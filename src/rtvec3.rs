@@ -125,7 +125,10 @@ impl RtVec3 {
         }
     }
 
-    pub fn reflect(v: RtVec3, n: RtVec3) -> RtVec3 {
+    pub fn reflect(
+        v: RtVec3, 
+        n: RtVec3
+    ) -> RtVec3 {
         v - 2.0 * v.dot(&n) * n
     }
 
