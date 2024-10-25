@@ -2,7 +2,11 @@ use raytracing_in_a_weekend::camera::Camera;
 use raytracing_in_a_weekend::rtvec3::Point3;
 use raytracing_in_a_weekend::hit::{HittableList, Sphere};
 use raytracing_in_a_weekend::ray::Color;
-use raytracing_in_a_weekend::material::{default_material, default_material_lambertian, default_material_metal, new_material_lambertian, new_material_lambertian_float, new_material_metal_float, new_material_metal};
+use raytracing_in_a_weekend::material::{
+    default_material, default_material_lambertian, default_material_metal, 
+    new_material_lambertian, new_material_lambertian_float, new_material_metal_float, 
+    new_material_metal
+};
 
 use std::rc::Rc;
 
@@ -15,20 +19,18 @@ fn main() {
     let sample_ray_bounce_max: u32 = 10;
 
     // Build Colors
-    let color_silver = Color::new_rgb(0.8, 0.8, 0.8);
-    let color_gold = Color::new_rgb(0.8, 0.6, 0.2);
-    let color_blue_gray = Color::new_rgb(0.1, 0.2, 0.5);
-    let color_green_mountain_dew = Color::new_rgb(0.8, 0.8, 0.0);
+    let albedo_silver = Color::new_rgb(0.8, 0.8, 0.8);
+    let albedo_gold = Color::new_rgb(0.8, 0.6, 0.2);
+    let albedo_blue_gray = Color::new_rgb(0.1, 0.2, 0.5);
+    let albedo_green_mountain_dew = Color::new_rgb(0.8, 0.8, 0.0);
 
-    // Build (Color_1, Color_2, Color_3, fuzz)
-    let material_ground  = new_material_lambertian_float(0.8, 0.8, 0.0);
-    let material_center   = new_material_lambertian_float(0.1, 0.2, 0.5);
+    // Build (color: Color)
+    let material_center   = new_material_lambertian(albedo_blue_gray);
+    let material_ground  = new_material_lambertian(albedo_green_mountain_dew);
 
-    let material_left = new_material_metal(color_silver, 0.3);
-    let material_right = new_material_metal(color_gold, 1.0);
-
-    // let material_left = new_material_metal_float(0.8, 0.8, 0.8, 0.3);
-    // let material_right = new_material_metal_float(0.8, 0.6, 0.2, 1.0);
+    // Build (color: Color, fuzz: f64)
+    let material_left = new_material_metal(albedo_silver, 0.3);
+    let material_right = new_material_metal(albedo_gold, 1.0);
 
     let sphere_ground = Rc::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, Rc::clone(&material_ground)));
     let sphere_center = Rc::new(Sphere::new(Point3::new(0.0, 0.0, -1.2), 0.5, Rc::clone(&material_center)));

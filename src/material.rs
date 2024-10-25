@@ -92,14 +92,8 @@ pub fn default_material_lambertian() -> Rc<dyn Material> {
     Rc::new(Lambertian::new(Color::new_rgb(0.5, 0.5, 0.5))) 
 }
 
-pub fn new_material_lambertian(r: f64, g: f64, b: f64) -> Rc<dyn Material> {
-
-
-    // Integrate Color into 
-
-
-
-    Rc::new(Lambertian::new(Color::new_rgb(r, g, b)))
+pub fn new_material_lambertian(color: Color) -> Rc<dyn Material> {
+    Rc::new(Lambertian::new(color))
 }
 
 pub fn new_material_lambertian_float(r: f64, g: f64, b: f64) -> Rc<dyn Material> {
