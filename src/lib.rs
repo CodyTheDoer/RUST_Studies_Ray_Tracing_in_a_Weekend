@@ -4,10 +4,9 @@ pub mod material;
 pub mod ray;
 pub mod rtvec3;
 
-use hit::{Hittable, HittableList, HitRecord};
-// use material::default_material_lambertian;
-use ray::{Ray, Color};
-use ray::{write_color_to_pixel, color};
+// use hit::{Hittable, HittableList, HitRecord};
+// use ray::{Ray, Color};
+// use ray::{write_color_to_pixel, color};
 use rtvec3::{Point3, RtVec3};
 
 use rand::prelude::*;
@@ -25,7 +24,7 @@ pub fn random_float() -> f64 {
     rand::thread_rng().gen()
 }
 
-pub fn random_float_interval(interval: Interval) -> f64 {
+pub fn random_float_range(interval: Interval) -> f64 {
     if interval.min.is_infinite() || interval.max.is_infinite() {
         panic!("Cannot generate a random value for infinite intervals");
     }
@@ -53,14 +52,14 @@ impl Interval {
         Interval {min, max}
     }
 
-    pub fn new_empty(min: f64, max: f64) -> Interval {
+    pub fn new_empty() -> Interval {
         Interval {
             min: f64::INFINITY,
             max: -f64::INFINITY,
         }
     }
 
-    pub fn new_universe(min: f64, max: f64) -> Interval {
+    pub fn new_universe() -> Interval {
         Interval {
             min: -f64::INFINITY,
             max: f64::INFINITY,

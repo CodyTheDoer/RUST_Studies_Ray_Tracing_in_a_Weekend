@@ -30,7 +30,7 @@ impl Lambertian {
 impl Material for Lambertian {
     fn scatter(
         &self,
-        r_in: Ray, 
+        _r_in: Ray, 
         rec: HitRecord, 
     ) -> Option<(Color, Ray)> {
         let mut scatter_direction = rec.normal + RtVec3::random_unit_vector();
@@ -107,13 +107,6 @@ impl Dielectric {
     }
 }
 
-// static double reflectance(double cosine, double refraction_index) {
-//     // Use Schlick's approximation for reflectance.
-//     auto r0 = (1 - refraction_index) / (1 + refraction_index);
-//     r0 = r0*r0;
-//     return r0 + (1-r0)*std::pow((1 - cosine),5);
-// }
-
 impl Material for Dielectric {
     fn scatter(
         &self,
@@ -132,11 +125,10 @@ impl Material for Dielectric {
         let sin_theta: f64 = f64::sqrt(1.0 - cos_theta * cos_theta);
         let cannot_refract: bool = ri * sin_theta > 1.0;
 
-        let mut direction: RtVec3 = RtVec3::new(0.0, 0.0, 0.0);
-        if cannot_refract || Dielectric::reflectance(cos_theta, ri) > random_float() {
-            direction = RtVec3::reflect(unit_direction, rec.normal)
+        let direction: RtVec3 = if cannot_refract || Dielectric::reflectance(cos_theta, ri) > random_float() {
+            RtVec3::reflect(unit_direction, rec.normal)
         } else {
-            direction = RtVec3::refract(unit_direction, rec.normal, ri)
+            RtVec3::refract(unit_direction, rec.normal, ri)
         };
         let scattered = Ray::new(rec.p, direction);
 

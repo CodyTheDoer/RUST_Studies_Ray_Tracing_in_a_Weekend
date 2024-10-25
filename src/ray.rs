@@ -6,6 +6,8 @@ use crate::material::default_material_lambertian;
 
 use crate::rtvec3::{RtVec3, Point3};
 
+use crate::random_float_range;
+
 use std::fs::File;
 use std::io::Write;
 use std::ops::Mul;
@@ -47,6 +49,28 @@ pub struct Color {
 }
 
 impl Color {
+    pub fn random() -> Self {
+        let r: f64 = random_float_range(Interval::new(0.0, 1.0));
+        let g: f64 = random_float_range(Interval::new(0.0, 1.0));
+        let b: f64 = random_float_range(Interval::new(0.0, 1.0));
+        Color {
+            r,
+            g,
+            b,
+        }
+    }
+    
+    pub fn random_range(interval: Interval) -> Self {
+        let r: f64 = random_float_range(interval.clone());
+        let g: f64 = random_float_range(interval.clone());
+        let b: f64 = random_float_range(interval.clone());
+        Color {
+            r,
+            g,
+            b,
+        }
+    }
+    
     pub fn new_rgb(r: f64, g: f64, b: f64) -> Self {
         Color {
             r,
@@ -72,6 +96,18 @@ impl Mul<RtVec3> for Color {
             x: self.r * other.x,
             y: self.g * other.y,
             z: self.b * other.z,
+        }
+    }
+}
+
+impl Mul<Color> for Color {
+    type Output = Color;
+
+    fn mul(self, other: Color) -> Color {
+        Color {
+            r: self.r * other.r,
+            g: self.g * other.g,
+            b: self.b * other.b,
         }
     }
 }
@@ -102,12 +138,12 @@ pub fn hit_sphere(
 pub fn color(
     ray: Ray,
     world: &HittableList,
-    sample_ray_bounce_max: u32,
+    sample_bounce_max: u32,
 ) -> RtVec3 {
-    if sample_ray_bounce_max <= 0 {
+    if sample_bounce_max <= 0 {
         return RtVec3::new(0.0, 0.0, 0.0);
     }
-    let reflectance = 0.5;
+    // let reflectance = 0.5;
     let default_material = default_material_lambertian();
     let mut record: HitRecord = HitRecord::new(
         RtVec3::new(0.0, 0.0, 0.0),
@@ -118,7 +154,7 @@ pub fn color(
     );
     if world.hit(&ray, Interval::new(0.001, f64::INFINITY), &mut record) {
         if let Some((attenuation, scattered)) = record.material.clone().scatter(ray, record) {
-            return attenuation * color(scattered, world, sample_ray_bounce_max - 1);
+            return attenuation * color(scattered, world, sample_bounce_max - 1);
         }
         return RtVec3::new(0.0, 0.0, 0.0);
     }

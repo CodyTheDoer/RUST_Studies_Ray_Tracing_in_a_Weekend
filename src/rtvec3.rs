@@ -1,9 +1,9 @@
 use crate::Interval;
-use crate::{random_float, random_float_interval};
+use crate::{random_float, random_float_range};
 
 use std::ops::{Add, Sub, Mul, Div, Neg};
-use std::cmp;
-use rand::prelude::*;
+// use std::cmp;
+// use rand::prelude::*;
 
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
 pub struct RtVec3{
@@ -46,9 +46,9 @@ impl RtVec3 {
 
     pub fn random_range(interval: Interval) -> Self {
         RtVec3 {
-            x: random_float_interval(interval.clone()),
-            y: random_float_interval(interval.clone()),
-            z: random_float_interval(interval),
+            x: random_float_range(interval.clone()),
+            y: random_float_range(interval.clone()),
+            z: random_float_range(interval.clone()),
         }
     }
     
@@ -112,6 +112,15 @@ impl RtVec3 {
             let lensq = p.length_squared();
             if 1e-160 < lensq && lensq <= 1.0 {
                 return p / lensq.sqrt();
+            }
+        }
+    }
+
+    pub fn random_in_unit_disk() -> RtVec3 {
+        loop {
+            let p: RtVec3 = RtVec3::new(random_float_range(Interval::new(-1.0, 1.0)), random_float_range(Interval::new(-1.0, 1.0)), 0.0);
+            if p.length_squared() < 1.0 {
+                return p;
             }
         }
     }
