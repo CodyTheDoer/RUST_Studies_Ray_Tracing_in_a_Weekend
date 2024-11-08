@@ -12,7 +12,8 @@ The joy of building a ray tracer, for fun, in rust. This is what got me started 
 
 - Written in Rust.
 - CPU based Ray Tracing
-- Custom materials with customizable albedo, alpha, metal, and roughness.
+- Custom materials with customizable albedo and alpha,
+- customizable material parameters: dielectric, metal, roughness, etc.
 
 ### Project Results
 
