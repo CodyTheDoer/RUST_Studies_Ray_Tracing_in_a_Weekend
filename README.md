@@ -16,4 +16,4 @@ The joy of building a ray tracer, for fun, in rust. This is what got me started 
 
 ### Project Results
 
-![Final Render](./image.PPM)
+![Final Render](./final_render.png)
